@@ -39,6 +39,11 @@ file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/output)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
 
+# add myLib
+message(STATUS "lib cmake part ..." )
+add_subdirectory(lib INTERFACE)
+include_directories(${CMAKE_SOURCE_DIR}/lib/include) # important : other projects called by this cmake will know this include directory
+
 # add my_examples
 message(STATUS "my_examples cmake part ..." )
 add_subdirectory(my_examples)
