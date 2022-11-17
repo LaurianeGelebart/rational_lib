@@ -5,13 +5,9 @@
 
 int main() {
 
-    Ratio v(3);
+    Ratio<int> r(2,3) ; 
 
-    v[0] = 1.0;
-    v[1] = 0.3; 
-    v[2] = 5.2;
-
-    std::cout << "v : " << v << std::endl;    
+    r.display() ;   
 
     return 0;
 }

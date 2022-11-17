@@ -1,148 +1,212 @@
+#pragma once
+
 #include <iostream>
-#include <string>
 #include <cmath>
-#include <vector>
-#include <cstdlib>
-
 #include <fstream>
+#include <cassert>
 
 
-#ifndef __RATIO__HPP
-#define __RATIO__HPP
-
-
-// Doxygen menu
-/// \version 0.1
-/// \mainpage
-/// \image html myImage.jpg
-/// \tableofcontents
-/// \section instroduction_sec What for?
-/// Ratio is a super tool.
-/// \section install_bigsec How to install
-/// \subsection dependencies_sec Dependecies
-/// \li nothing
-/// \li Doxygen (if you want the documentation)
-/// \subsection install_sec Install with cmake (Linux / Mac)
-/// \li go to main dir
-/// \li mkdir build
-/// \li cd build
-/// \li cmake ..
-/// \li make
-/// \li if Doxygen installed: make html
-/// \li The documentation is located in :
-/// 	- [path to build]/doc/doc-doxygen/html/index.html or 
-/// 	- or [path to build]/INTERFACE/doc/doc-doxygen/html/index.html
-
-
-
-/// \class Ratio
-/// \brief class defining a vector for linear algebra operations.
+template<class T>
 class Ratio {
-
-public:
-
-	/// \brief constructor from a size and default constructor
-	/// \param size : the size of the requested vector (optional)
-    Ratio(const size_t size = 0);
-
-	/// \brief constructor from a size that fills the vector with a constant
-	/// \param size : the size of the requested vector
-	/// \param value : the constant value used to fill the vector
-    Ratio(const size_t size, const double &value);
-
-	/// \brief copy-constructor
-	/// \param v : the source vector to be copied
-	Ratio(const Ratio & v);
-
-    /// \brief destructor
-    ~Ratio() = default;
-
-
-private :
-  
-    std::vector<double> _data;     /*!< components of the vector */
-
+private : 
+    T _denominator;
+	T _numerator ; 
 
 public :
-	
-	/// \brief return the size of a Vector
-	inline size_t size() const {
-		return _data.size();
+
+	// constructor and default constructor
+    Ratio(const T _denominator=0, const T _numerator = 1.0);
+
+	// methods
+    void display() const;
+
+}; 
+
+template<typename T>
+Ratio<T>::Ratio(const T den, const T num) 
+: _numerator(num), _denominator(den)
+{}
+
+template<typename T>
+void Ratio<T>::display() const {
+	std::cout << _numerator << "/" << _denominator << std::endl;
+}
+
+
+
+
+/*
+    // constructor and default constructor
+    Ratio(const size_t size=0, const T value = 0.0);
+
+    // copy constructor
+	Ratio(const Ratio &v) = default;
+    
+    // copy constructor other type 
+    template<typename U>
+	Ratio<T>(const Ratio<U> &vec) : Ratio<T>(vec.size()){
+		for(size_t i=0; i<vec.size(); ++i)
+			m_data[i] = static_cast<T>(vec[i]); 
 	}
 
-	/// \brief affectation operator
-	Ratio & operator=(const Ratio &v);
+    // destructor
+    ~Ratio() = default;
 
-	/// \brief operator to access to the ist element of a vector
-	/// \param  i: index of the targeted vector component
-	/// \return vector[i] 
-	double& operator[](const size_t& i);
-
-	/// \brief operator to access to the ist element of a vector (const version)
-	/// \param i: index of the targeted vector component
-	/// \return vector[i] (constant reference)
-	const double& operator[](const size_t& i) const;
-
-	/// \brief add 2 vectors of same size
-	/// \param vec : vector to add to the calling vector (should have the same dimension as the calling vector)
-	/// \return the sum of the current vector and the argument vector
-	Ratio operator+(const Ratio &vec) const;
-
-	/// \brief substract a vector to *this (where the two vectors have the same size)
-	/// \param vec : vector to substract to the calling vector (should have the same dimension as the calling vector)
-	/// \return the sum of the current vector and the argument vector
-	Ratio operator-(const Ratio &vec) const;
-
-	/// \brief unary minus
-	/// \return the minus the calling vector 
-	Ratio operator-() const;
-
-	/// \brief scale a vector with a constant value
-	/// \param value : scale factor
-	/// \return the scaled vector
-	Ratio operator*(const double &value) const;
-
-	/// \brief compute the norm L2 of a vector
-	/// \return the L2 norm of the calling vector
-	/// \bug no bug at all, but I know this function exists, just in case.
-    double norm() const;
-
-	/// \brief inplace normalize a vector such its norm is 1.
-	/// \test try normalize null vector.
-    void normalize();
-
-    /// \brief compute the inner product between 2 vectors
-    /// \param v : the second vector to consider in the dot product.
-    /// \return : the scalar value corresponding to the dot product. 
-    double dot(const Ratio &v) const;
-
-    /// \brief save a vector in a file
-    /// \param filename : name of the file (including path) where to save the vector data
-    /// \return EXIT_SUCCESS if the file is save correctly, else EXIT_FAILURE 
-    int save(const std::string &filename) const;
-
-    /// \brief load a vector from a file, the size of the vector should be already the good one ...
-    /// \param filename : name of the file (including path) to open and load the vector data
-    /// \return EXIT_SUCCESS if the file is save correctly, else EXIT_FAILURE 
-    /// \todo : make a nice todo list :)
-    int load(const std::string &filename);
-
-    /// \brief display the elements of the vector
+    // methods
     void display() const;
+    T dot(const Ratio &v) const;
+    inline T norm() const { return sqrt(this->dot(*this)); }
+    inline size_t size() const { return m_data.size() ; }
+
+    // operators
+    Ratio& operator=(const Ratio &vec);
+    Ratio operator+ (const Ratio& vec) ; 
+    Ratio operator- (const Ratio& vec) ; 
+    Ratio operator* (const Ratio& vec) ; 
+    Ratio operator* (const int nb) ; 
+    Ratio operator- () ; 
+
+    const T& operator[](const size_t& i) const;
+    T& operator[](const size_t& i);
+
+    bool save(const std::string &filename) const;
 
 };
 
+template<typename T>
+Ratio<T>::Ratio(const size_t size, const T value) 
+: m_data(size,value) 
+{}
 
-	/// \brief scale a vector with a constant value
-	/// \param value : scale factor
-	/// \param vec is the vector to be scaled
-	/// \return the scaled vector
-	Ratio operator*(const double value, const Ratio &vec);
+template<typename T>
+Ratio<T>& Ratio<T>::operator=(const Ratio<T> &vec)
+{
+	if(&vec == this) return *this;
 
-	/// \brief overload the operator << for Ratio
-    /// \param stream : input stream
-    /// \param v : the vector to output
-    /// \return the output stream containing the vector data
-    std::ostream& operator<< (std::ostream& stream, const Ratio& v);
+	m_data = vec.m_data;
 
-#endif
+	return *this;
+}
+
+template<typename T>
+Ratio<T> Ratio<T>::operator+ (const Ratio<T>& vec) {
+	assert(m_data.size() == vec.size());
+
+	Ratio v3(vec.size()) ;
+
+	for(size_t i=0; i< vec.size(); ++i){
+		v3[i] = m_data[i] + vec[i] ; 
+	}
+	return v3 ; 
+}
+
+template<typename T>
+Ratio<T> Ratio<T>::operator- (const Ratio<T>& vec) {
+	assert(m_data.size() == vec.size());
+
+	Ratio v3(vec.size()) ;
+
+	for(size_t i=0; i< vec.size(); ++i){
+		v3[i] = m_data[i] - vec[i] ; 
+	}
+	return v3 ; 
+}
+
+template<typename T>
+Ratio<T> Ratio<T>::operator- () {
+
+	Ratio v3(m_data.size()) ;
+
+	for(size_t i=0; i< m_data.size(); ++i){
+		v3[i] = - m_data[i] ; 
+	}
+	return v3 ; 
+}
+
+template<typename T>
+Ratio<T> Ratio<T>::operator* (const Ratio<T>& vec) {
+	assert(m_data.size() == vec.size());
+
+	Ratio v3(vec.size()) ;
+
+	for(size_t i=0; i< vec.size(); ++i){
+		v3[i] = m_data[i] * vec[i] ; 
+	}
+	return v3 ; 
+}
+
+template<typename T>
+Ratio<T> Ratio<T>::operator* (const int nb) {
+
+	Ratio v3(m_data.size()) ;
+
+	for(size_t i=0; i< m_data.size(); ++i){
+		v3[i] = m_data[i] * nb; 
+	}
+	return v3 ; 
+}
+
+template<typename T>
+const T& Ratio<T>::operator[](const size_t& i) const{
+    return m_data[i]; 
+}
+
+template<typename T>
+T& Ratio<T>::operator[](const size_t& i){
+    return m_data[i]; 
+}
+
+template<typename T>
+void Ratio<T>::display() const {
+	for(size_t i=0; i< m_data.size(); ++i)
+		std::cout << m_data[i] << " ";
+	std::cout << std::endl;
+}
+
+template<typename T>
+bool Ratio<T>::save(const std::string &filename) const{
+
+	//open the file
+	std::ofstream myfile;
+	myfile.open(filename, std::ios::out | std::ios::binary);
+	
+	if(!myfile.is_open()){
+		std::cerr << "error: can not create file: " << filename << std::endl;
+		return false;
+	}
+
+	// write the vector size
+	myfile << size() << std::endl;
+
+	for(size_t i=0; i<size(); ++i)
+		myfile << m_data[i] << " ";
+
+	myfile.close();
+
+	return true;
+}
+
+template<typename T>
+T Ratio<T>::dot(const Ratio<T> & vec) const {
+	assert(m_data.size() == vec.m_data.size());
+
+	T result = 0.0;
+	for(size_t i=0; i<m_data.size(); ++i)
+		result += m_data[i] * vec.m_data[i];
+
+	return result;
+}
+
+template<typename T>
+std::ostream& operator<< (std::ostream& stream, const Ratio<T>& v) {
+	for(size_t i=0; i< v.size(); ++i){
+		stream << v[i] << " "; 
+	}
+	return stream ; 
+}
+
+template<typename T>
+std::ostream& operator<< (std::ostream& stream, const Ratio<T>& v) ;
+
+*/
+

@@ -9,15 +9,11 @@
 ../lib/include/Ratio.hpp
 iostream
 -
-string
--
 cmath
 -
-vector
--
-cstdlib
--
 fstream
+-
+cassert
 -
 
 /home/lauriane/Documents/rational_lib/lib/src/Ratio.cpp
