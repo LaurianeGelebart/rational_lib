@@ -5,9 +5,15 @@
 
 int main() {
 
-    Ratio<int> r(2,3) ; 
+    Ratio<int> r(4,6) ; 
+ 
 
-    r.display() ;   
+    r.reduce(); 
+    r.display() ; 
+    r.pow(-2);
 
+    r.display(); 
+  //  Ratio<int> r1 =  Ratio<int>::zero() ; 
+  //  r1.display();
     return 0;
 }

@@ -1,6 +1,7 @@
 #pragma once
-
+#include <numeric>
 #include <iostream>
+#include <algorithm>
 #include <cmath>
 #include <fstream>
 #include <cassert>
@@ -9,21 +10,69 @@
 template<class T>
 class Ratio {
 private : 
-    T _denominator;
 	T _numerator ; 
+    T _denominator;
 
 public :
 
 	// constructor and default constructor
     Ratio(const T _denominator=0, const T _numerator = 1.0);
 
+    // copy constructor
+	Ratio(const Ratio &r) = default;
+
+    // destructor
+    ~Ratio() = default;
+
 	// methods
     void display() const;
+	void reduce(); 
+	void pow(const int n) ;
 
+
+	 // operators
+    Ratio& operator=(const Ratio &r);
+    Ratio operator+ (const Ratio& r) ; 
+    Ratio operator- (const Ratio& r) ; 
+    Ratio operator* (const Ratio& r) ; 
+    Ratio operator* (const int nb) ; 
+    Ratio operator/ (const Ratio& r) ;
+    Ratio operator- () ;  
+
+
+	//friends function 
+	friend Ratio<T> operator/(const Ratio<T>& r1, const Ratio<T>& r2);
+	 Ratio zero(); 
+	
+	
+	//friend Ratio<T> convert_float_to_ratio(const float x, const int nb_iter) const ; 
+
+
+/*
+	friend Ratio<T> Ratio<T> convert_float_to_ratio(const float x, const int nb_iter) const{
+		if (x==0) return 0/1 ;
+		if (nb_iter==0) return 0/1 ; 
+		if(x<1){
+			return 1/(convert_float_to_ratio(1/x, nb_iter)); 
+		}
+		int q = (int)x; 
+		return q/1 + convert_float_to_ratio(x-q, nb_iter-1); 
+	}; */
 }; 
 
 template<typename T>
-Ratio<T>::Ratio(const T den, const T num) 
+Ratio<T> operator/(const Ratio<T>& r1, const Ratio<T>& r2){
+	return Ratio<T>((r1._numerator * r2._denominator), (r1._denominator * r2._numerator));
+}
+
+template<typename T>
+Ratio<T> Ratio<T>::zero(){
+	Ratio<T> r(0.0,1.0) ;
+	return r; 
+}
+
+template<typename T>
+Ratio<T>::Ratio(const T num, const T den) 
 : _numerator(num), _denominator(den)
 {}
 
@@ -32,7 +81,37 @@ void Ratio<T>::display() const {
 	std::cout << _numerator << "/" << _denominator << std::endl;
 }
 
+template<typename T>
+void Ratio<T>::pow(const int n) {
+	if(n==0){	
+		//*this = zero() ;
+	}else if (n!=1 && n!=0){
+		for (size_t i=2 ; i<=std::abs(n) ; i++){
+			this->_numerator *= this->_numerator ; 
+			this->_denominator *= this->_denominator ; 
+		}
+	}
+	if (n<0){
+		T num = this->_numerator; 
+		this->_numerator = this->_denominator ; 
+		this->_denominator = num ; 
+	}
+}
 
+template<typename T>
+void Ratio<T>::reduce() {
+	T pgcd = std::gcd(this->_numerator, this->_denominator); 
+	this->_numerator = this->_numerator/pgcd; 
+	this->_denominator = this->_denominator/pgcd; 
+}
+
+template<typename T>
+Ratio<T> Ratio<T>::operator* (const Ratio<T>& r) {
+	return Ratio<T>((this->_numerator*r._numerator), this->_denominator*r._denominator) ; 
+}
+
+
+ 
 
 
 /*
