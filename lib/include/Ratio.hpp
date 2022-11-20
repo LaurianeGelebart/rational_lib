@@ -27,6 +27,7 @@ public :
 	// methods
     void display() const;
 	void reduce(); 
+	void abs(); 
 	void pow(const int n) ;
 
 
@@ -38,30 +39,35 @@ public :
     Ratio operator* (const int nb) ; 
     Ratio operator/ (const Ratio& r) ;
     Ratio operator- () ;  
+    bool operator== (const Ratio& r) ;
+    bool operator!= (const Ratio& r) ;
+    bool operator<= (const Ratio& r) ;
+    bool operator>= (const Ratio& r) ;
+    bool operator< (const Ratio& r) ;
+    bool operator> (const Ratio& r) ;
 
-	//static
+	// static
 	static Ratio zero(); 
 	static Ratio one(); 
 	static Ratio inf(); 
-	
+	static Ratio convert_float_to_ratio(const float x, const int nb_iter) ;  
 
-/*
-	Ratio<T> Ratio<T> convert_float_to_ratio(const float x, const int nb_iter) const{
-		if (x==0) return 0/1 ;
-		if (nb_iter==0) return 0/1 ; 
-		if(x<1){
-			return 1/(convert_float_to_ratio(1/x, nb_iter)); 
-		}
-		int q = (int)x; 
-		return q/1 + convert_float_to_ratio(x-q, nb_iter-1); 
-	}; */
-}; 
+	// friend
+	friend std::ostream& operator<< (std::ostream& stream, const Ratio<T>& r) {			
+		
+		stream << r._numerator << "/" << r._denominator ;
+
+		return stream;
+	}; 
+};	
 
 
+//--------------------------Constructor------------------------------//
 template<typename T>
 Ratio<T>::Ratio(const T num, const T den) 
 : _numerator(num), _denominator(den)
 {}
+
 
 //--------------------------Operator------------------------------//
 template<typename T>
@@ -82,7 +88,9 @@ Ratio<T> Ratio<T>::operator- () {
 
 template<typename T>
 Ratio<T> Ratio<T>::operator* (const Ratio<T>& r) {
-	return Ratio<T>((this->_numerator*r._numerator), (this->_denominator*r._denominator)) ; 
+	Ratio<T> result((this->_numerator*r._numerator), (this->_denominator*r._denominator)) ; 
+	result.reduce() ; 
+	return result; 
 }
 
 
@@ -90,6 +98,8 @@ template<typename T>
 Ratio<T> Ratio<T>::operator/(const Ratio<T>& r){
 	return Ratio<T>((this->_numerator * r._denominator), (this->_denominator * r._numerator));
 }
+
+
 
 
 //--------------------------Methodes------------------------------//
@@ -122,6 +132,11 @@ void Ratio<T>::reduce() {
 	this->_denominator = this->_denominator/pgcd; 
 }
 
+template<typename T>
+void Ratio<T>::abs() {
+	*this = Ratio<T>(std::abs(this->_numerator),this->_denominator); 
+}
+
 
 
 //--------------------------static------------------------------//
@@ -138,6 +153,16 @@ Ratio<T> Ratio<T>::one(){
 template<typename T>
 Ratio<T> Ratio<T>::inf(){
 	return Ratio<T>(1.0,0.0); 
+}
+
+template<typename T>
+Ratio<T> Ratio<T>::convert_float_to_ratio(const float x, const int nb_iter){
+	if (x==0 || nb_iter==0) return zero() ;
+	if(x<1){
+		return 1/(convert_float_to_ratio(1/x, nb_iter)); 
+	}
+	int q = (int)x; 
+	return q/1 + convert_float_to_ratio(x-q, nb_iter-1); 
 }
 
  
