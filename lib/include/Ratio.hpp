@@ -39,17 +39,14 @@ public :
     Ratio operator/ (const Ratio& r) ;
     Ratio operator- () ;  
 
-
-	//friends function 
-	friend Ratio<T> operator/(const Ratio<T>& r1, const Ratio<T>& r2);
-	 Ratio zero(); 
+	//static
+	static Ratio zero(); 
+	static Ratio one(); 
+	static Ratio inf(); 
 	
-	
-	//friend Ratio<T> convert_float_to_ratio(const float x, const int nb_iter) const ; 
-
 
 /*
-	friend Ratio<T> Ratio<T> convert_float_to_ratio(const float x, const int nb_iter) const{
+	Ratio<T> Ratio<T> convert_float_to_ratio(const float x, const int nb_iter) const{
 		if (x==0) return 0/1 ;
 		if (nb_iter==0) return 0/1 ; 
 		if(x<1){
@@ -60,22 +57,42 @@ public :
 	}; */
 }; 
 
-template<typename T>
-Ratio<T> operator/(const Ratio<T>& r1, const Ratio<T>& r2){
-	return Ratio<T>((r1._numerator * r2._denominator), (r1._denominator * r2._numerator));
-}
-
-template<typename T>
-Ratio<T> Ratio<T>::zero(){
-	Ratio<T> r(0.0,1.0) ;
-	return r; 
-}
 
 template<typename T>
 Ratio<T>::Ratio(const T num, const T den) 
 : _numerator(num), _denominator(den)
 {}
 
+//--------------------------Operator------------------------------//
+template<typename T>
+Ratio<T>& Ratio<T>::operator=(const Ratio<T> &r)
+{
+	if(&r == this) return *this;
+
+	this->_denominator = r._denominator;
+	this->_numerator = r._numerator;
+
+	return *this;
+}
+
+template<typename T>
+Ratio<T> Ratio<T>::operator- () {
+	return Ratio<T>(-this->_numerator, this->_denominator) ; 
+}
+
+template<typename T>
+Ratio<T> Ratio<T>::operator* (const Ratio<T>& r) {
+	return Ratio<T>((this->_numerator*r._numerator), (this->_denominator*r._denominator)) ; 
+}
+
+
+template<typename T>
+Ratio<T> Ratio<T>::operator/(const Ratio<T>& r){
+	return Ratio<T>((this->_numerator * r._denominator), (this->_denominator * r._numerator));
+}
+
+
+//--------------------------Methodes------------------------------//
 template<typename T>
 void Ratio<T>::display() const {
 	std::cout << _numerator << "/" << _denominator << std::endl;
@@ -84,7 +101,7 @@ void Ratio<T>::display() const {
 template<typename T>
 void Ratio<T>::pow(const int n) {
 	if(n==0){	
-		//*this = zero() ;
+		*this = zero() ;
 	}else if (n!=1 && n!=0){
 		for (size_t i=2 ; i<=std::abs(n) ; i++){
 			this->_numerator *= this->_numerator ; 
@@ -105,11 +122,23 @@ void Ratio<T>::reduce() {
 	this->_denominator = this->_denominator/pgcd; 
 }
 
+
+
+//--------------------------static------------------------------//
 template<typename T>
-Ratio<T> Ratio<T>::operator* (const Ratio<T>& r) {
-	return Ratio<T>((this->_numerator*r._numerator), this->_denominator*r._denominator) ; 
+Ratio<T> Ratio<T>::zero(){
+	return Ratio<T>(0.0,1.0); 
 }
 
+template<typename T>
+Ratio<T> Ratio<T>::one(){
+	return Ratio<T>(1.0,1.0); 
+}
+
+template<typename T>
+Ratio<T> Ratio<T>::inf(){
+	return Ratio<T>(1.0,0.0); 
+}
 
  
 

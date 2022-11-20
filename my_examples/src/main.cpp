@@ -10,10 +10,10 @@ int main() {
 
     r.reduce(); 
     r.display() ; 
-    r.pow(-2);
+    r.pow(0);
 
     r.display(); 
-  //  Ratio<int> r1 =  Ratio<int>::zero() ; 
-  //  r1.display();
+    Ratio<int> r1 =  Ratio<int>::zero() ; 
+   r1.display();
     return 0;
 }
