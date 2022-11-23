@@ -10,19 +10,17 @@ int main() {
  
 
     r.reduce(); 
-    r.display() ; 
-    r.pow(3);
-    r.display(); 
-    r = -r ; 
-    r.display() ; 
-   r.abs() ; 
-   std::cout << "r abs :" << r <<std::endl ;
 
+//   std::cout << "r abs :" << r <<std::endl ;
 
-    Ratio<int> r1 =  Ratio<int>::zero() ; 
-   r1.display();
+    float f = 0.25; 
+     Ratio<int> r3 =  Ratio<int>::convert_float_to_ratio(f, 25); 
+r3.display() ; 
 
-   std::cout << r2*r <<std::endl ;  
+ //   Ratio<int> r1 =  Ratio<int>::zero() ; 
+ //  r1.display();
+
+//   std::cout << r2*r <<std::endl ;  
    
     return 0;
 }

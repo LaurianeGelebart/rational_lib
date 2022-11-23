@@ -29,6 +29,7 @@ public :
 	void reduce(); 
 	void abs(); 
 	void pow(const int n) ;
+	T convert_ratio_to_t();
 
 
 	 // operators
@@ -87,6 +88,11 @@ Ratio<T> Ratio<T>::operator- () {
 }
 
 template<typename T>
+Ratio<T> Ratio<T>::operator+ (const Ratio& r)  {
+	return Ratio<T>(this->_numerator*r._denominator+this->_denominator*r._numerator, this->_denominator*r._denominator) ; 
+}
+
+template<typename T>
 Ratio<T> Ratio<T>::operator* (const Ratio<T>& r) {
 	Ratio<T> result((this->_numerator*r._numerator), (this->_denominator*r._denominator)) ; 
 	result.reduce() ; 
@@ -137,6 +143,10 @@ void Ratio<T>::abs() {
 	*this = Ratio<T>(std::abs(this->_numerator),this->_denominator); 
 }
 
+template<typename T>
+T Ratio<T>::convert_ratio_to_t(){
+	return (T)((T)this->_numerator / (T)this->_denominator) ; 
+}
 
 
 //--------------------------static------------------------------//
@@ -159,10 +169,10 @@ template<typename T>
 Ratio<T> Ratio<T>::convert_float_to_ratio(const float x, const int nb_iter){
 	if (x==0 || nb_iter==0) return zero() ;
 	if(x<1){
-		return 1/(convert_float_to_ratio(1/x, nb_iter)); 
+		return Ratio<T>(1.0,(convert_float_to_ratio((float)1.0/x, nb_iter).convert_ratio_to_t())); 
 	}
-	int q = (int)x; 
-	return q/1 + convert_float_to_ratio(x-q, nb_iter-1); 
+	float q = (int)x; 
+	return Ratio<T>(Ratio<T>(q,1.0) + convert_float_to_ratio(x-q, nb_iter-1)); 
 }
 
  
