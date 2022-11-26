@@ -7,39 +7,64 @@
 #include <cassert>
 
 
+/// @class Ratio 
+/// @brief class defining a ratio to represent a real number by a quotient of 2 integers
+/// @tparam T can be : int, long int
 template<class T>
 class Ratio {
+
 private : 
+	/// @brief numerator of the ratio 
 	T _numerator ; 
+    /// @brief denominator of the ratio 
     T _denominator;
 
 public :
 
-	// constructor and default constructor
-    Ratio(const T _denominator=0, const T _numerator = 1.0);
+/*------------------- CONSTRUCT0R ---------------------*/
 
-    // copy constructor
+	//// @brief constructor from a numerator and a denominator and default constructor
+	/// @param _denominator : numerator of the ratio (default : 0.0)
+	/// @param _numerator : denominator of the ratio (default : 1.0)
+    Ratio(const T _numerator=0.0, const T _denominator = 1.0);
+
+	/// @brief copy-constructor
+	/// @param r source ratio to be copied
 	Ratio(const Ratio &r) = default;
 
-    // destructor
+    /// @brief destructor
     ~Ratio() = default;
 
-	// methods
-    void display() const;
-	void reduce(); 
-	void abs(); 
-	void pow(const int n) ;
-	T convert_ratio_to_t();
 
+/*------------------- OPERATOR ---------------------*/
 
-	 // operators
+    /// @brief affectation operator
+    /// @param r ratio affetct to the calling ratio 
     Ratio& operator=(const Ratio &r);
+
+	/// @brief add 2 ratio of the same type
+    /// @param r ratio to add to the calling ratio 
+    /// @return the sum of the current ratio and the argument ratio
     Ratio operator+ (const Ratio& r) ; 
+
     Ratio operator- (const Ratio& r) ; 
+
+    /// @brief multiply 2 ratio of the same type
+    /// @param r ratio to multiply to the calling ratio 
+    /// @return the multiplication of the current ratio and the argument ratio
     Ratio operator* (const Ratio& r) ; 
+
     Ratio operator* (const int nb) ; 
-    Ratio operator/ (const Ratio& r) ;
+
+    /// @brief divide 2 ratio of the same type
+    /// @param r ratio to divide to the calling ratio 
+    /// @return the division of the current ratio and the argument ratio
+	Ratio operator/ (const Ratio& r) ;
+
+    /// @brief unary minus
+    /// @return the minus the calling ratio 
     Ratio operator- () ;  
+
     bool operator== (const Ratio& r) ;
     bool operator!= (const Ratio& r) ;
     bool operator<= (const Ratio& r) ;
@@ -47,19 +72,65 @@ public :
     bool operator< (const Ratio& r) ;
     bool operator> (const Ratio& r) ;
 
-	// static
+
+
+/*------------------- METHODES ---------------------*/
+
+	/// @brief display the ratio
+    void display() const;
+
+	/// @brief reduce a ratio to its irreducible form
+	void reduce(); 
+
+	/// @brief find the absolute value of a ratio 
+    /// @return the absolute value the calling ratio 
+	Ratio abs(); 
+
+	/// @brief convert a ratio to a real rumber 
+	/// @return the ratio converted into a real
+	T convert_ratio_to_T();
+
+	/// @brief inverse a ratio 
+	/// @return the inverted ratio 
+	Ratio inverse() ; 
+
+
+/*------------------- STATIC METHODES ---------------------*/
+
+	/// @brief the zero-valued rational
+	/// @return 0.0/1.0
 	static Ratio zero(); 
+
+	/// @brief the rational of one
+	/// @return 1.0/1.0
 	static Ratio one(); 
+
+	/// @brief the rational of infinity
+	/// @return 1.0/0.0
 	static Ratio inf(); 
+
+	/// @brief convert a real number to a Ratio
+	/// @param x the real to convert to ratio 
+	/// @param nb_iter number of recursive call 
+	/// @return  the real converted into a rational 
 	static Ratio convert_float_to_ratio(const float x, const int nb_iter) ;  
 
-	// friend
-	friend std::ostream& operator<< (std::ostream& stream, const Ratio<T>& r) {			
-		
-		stream << r._numerator << "/" << r._denominator ;
+	// c'est en cours pas touche 
+	static Ratio pow(const Ratio& r, const int n); 
 
+
+
+/*------------------- FRIENDS METODES ---------------------*/
+
+	/// \brief overload the operator << for ratio
+    /// \param stream : input stream
+    /// \param r : the ratio to output
+    /// \return the output stream containing the ratio data
+	friend std::ostream& operator<< (std::ostream& stream, const Ratio<T>& r) {			
+		stream << r._numerator << "/" << r._denominator ;
 		return stream;
 	}; 
+
 };	
 
 
@@ -114,22 +185,6 @@ void Ratio<T>::display() const {
 	std::cout << _numerator << "/" << _denominator << std::endl;
 }
 
-template<typename T>
-void Ratio<T>::pow(const int n) {
-	if(n==0){	
-		*this = zero() ;
-	}else if (n!=1 && n!=0){
-		for (size_t i=2 ; i<=std::abs(n) ; i++){
-			this->_numerator *= this->_numerator ; 
-			this->_denominator *= this->_denominator ; 
-		}
-	}
-	if (n<0){
-		T num = this->_numerator; 
-		this->_numerator = this->_denominator ; 
-		this->_denominator = num ; 
-	}
-}
 
 template<typename T>
 void Ratio<T>::reduce() {
@@ -139,14 +194,20 @@ void Ratio<T>::reduce() {
 }
 
 template<typename T>
-void Ratio<T>::abs() {
-	*this = Ratio<T>(std::abs(this->_numerator),this->_denominator); 
+Ratio<T> Ratio<T>::abs() {
+	return Ratio<T>( std::abs(this->_numerator) , this->_denominator); 
 }
 
 template<typename T>
-T Ratio<T>::convert_ratio_to_t(){
+T Ratio<T>::convert_ratio_to_T(){
 	return (T)((T)this->_numerator / (T)this->_denominator) ; 
 }
+
+template<typename T>
+Ratio<T> Ratio<T>::inverse() {
+	return Ratio<T>(this->_denominator, this->_numerator) ; 
+}
+
 
 
 //--------------------------static------------------------------//
@@ -169,11 +230,18 @@ template<typename T>
 Ratio<T> Ratio<T>::convert_float_to_ratio(const float x, const int nb_iter){
 	if (x==0 || nb_iter==0) return zero() ;
 	if(x<1){
-		return Ratio<T>(1.0,(convert_float_to_ratio((float)1.0/x, nb_iter).convert_ratio_to_t())); 
+		return Ratio<T>(1.0,(convert_float_to_ratio((float)1.0/x, nb_iter).convert_ratio_to_T())); 
 	}
 	float q = (int)x; 
 	return Ratio<T>(Ratio<T>(q,1.0) + convert_float_to_ratio(x-q, nb_iter-1)); 
 }
+/*
+template<typename T, typename U>
+Ratio<T> Ratio<T>::pow(const Ratio<T>& r, const U n) {
+	if(n==0) return one() ;
+	Ratio<T> result = r * pow(r, std::abs(n-1));
+	return (n<0) ? inverse(result) : result;
+}*/
 
  
 
