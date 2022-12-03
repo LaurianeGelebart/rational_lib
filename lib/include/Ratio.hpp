@@ -36,6 +36,17 @@ public :
     ~Ratio() = default;
 
 
+/*------------------- GETTERS ---------------------*/
+	
+	/// @brief getter of the ratio numerator 
+	/// @return numerator of the current ratio
+	T get_numerator(); 
+	
+	/// @brief getter of the ratio denominator 
+	/// @return denominator of the current ratio
+	T get_denominator(); 
+
+
 /*------------------- OPERATOR ---------------------*/
 
     /// @brief affectation operator
@@ -84,7 +95,10 @@ public :
 
 	/// @brief find the absolute value of a ratio 
     /// @return the absolute value the calling ratio 
-	Ratio abs(); 
+	constexpr Ratio abs() 
+	noexcept{
+		return (this->_numerator < static_cast<T>(0)) ? Ratio<T>( -this->_numerator , this->_denominator) : Ratio<T>(this->_numerator, this->_denominator) ;
+	}
 
 	/// @brief convert a ratio to a real rumber 
 	/// @return the ratio converted into a real
@@ -140,6 +154,17 @@ Ratio<T>::Ratio(const T num, const T den)
 : _numerator(num), _denominator(den)
 {}
 
+//--------------------------Getters------------------------------//
+
+template<typename T>
+T Ratio<T>::get_numerator(){
+	return this->_numerator ; 
+}
+
+template<typename T>
+T Ratio<T>::get_denominator(){
+	return this->_denominator ; 
+}
 
 //--------------------------Operator------------------------------//
 template<typename T>
@@ -193,10 +218,12 @@ void Ratio<T>::reduce() {
 	this->_denominator = this->_denominator/pgcd; 
 }
 
+/* -----Lequel est le mieux ?-------
 template<typename T>
 Ratio<T> Ratio<T>::abs() {
 	return Ratio<T>( std::abs(this->_numerator) , this->_denominator); 
-}
+}*/
+
 
 template<typename T>
 T Ratio<T>::convert_ratio_to_T(){

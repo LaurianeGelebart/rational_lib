@@ -48,3 +48,11 @@ include_directories(${CMAKE_SOURCE_DIR}/lib/include) # important : other project
 message(STATUS "my_examples cmake part ..." )
 add_subdirectory(my_examples)
 
+# add my_test
+find_package(GTest OPTIONAL_COMPONENTS)
+if(GTEST_FOUND)
+	message(STATUS "my_test cmake part ..." )
+	add_subdirectory(my_test)
+elseif()
+	message(WARNING "google test not found, skipping my_test ..." )
+endif()
