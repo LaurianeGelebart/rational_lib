@@ -7,8 +7,10 @@ int main() {
 
     Ratio<int> r(-4,6) ; 
     Ratio<int> r2(2,10) ; 
-    Ratio<int> r3 ; 
-    std::cout << r3.get_numerator() << std::endl ; 
+    std::cout << r+r2 << std::endl ; 
+
+ //   Ratio<int> r3 ; 
+   // std::cout << r3.get_numerator() << std::endl ; 
  
 //  std::cout << r.abs()*r2 <<std::endl ;
   //  static_assert ( (r.abs()) == r3 , "test of abs ’ at compile time" ) ; 

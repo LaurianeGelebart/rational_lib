@@ -46,6 +46,14 @@ public :
 	/// @return denominator of the current ratio
 	T get_denominator(); 
 
+	/// @brief 
+	/// @param num 
+	void set_numerator(T num) ; 
+
+	/// @brief 
+	/// @param den 
+	void set_denominator(T den) ; 
+
 
 /*------------------- OPERATOR ---------------------*/
 
@@ -166,6 +174,16 @@ T Ratio<T>::get_denominator(){
 	return this->_denominator ; 
 }
 
+template<typename T>
+void Ratio<T>::set_numerator(T num){
+	this->_numerator = num ; 
+}
+
+template<typename T>
+void Ratio<T>::set_denominator(T den){
+	this->_denominator = den; 
+}
+
 //--------------------------Operator------------------------------//
 template<typename T>
 Ratio<T>& Ratio<T>::operator=(const Ratio<T> &r)
@@ -180,12 +198,16 @@ Ratio<T>& Ratio<T>::operator=(const Ratio<T> &r)
 
 template<typename T>
 Ratio<T> Ratio<T>::operator- () {
-	return Ratio<T>(-this->_numerator, this->_denominator) ; 
+	Ratio<T> result(-this->_numerator, this->_denominator) ; 
+	result.reduce() ; 
+	return result; 
 }
 
 template<typename T>
 Ratio<T> Ratio<T>::operator+ (const Ratio& r)  {
-	return Ratio<T>(this->_numerator*r._denominator+this->_denominator*r._numerator, this->_denominator*r._denominator) ; 
+	Ratio<T> result(this->_numerator*r._denominator+this->_denominator*r._numerator, this->_denominator*r._denominator); 
+	result.reduce() ; 
+	return result; 
 }
 
 template<typename T>
@@ -198,7 +220,9 @@ Ratio<T> Ratio<T>::operator* (const Ratio<T>& r) {
 
 template<typename T>
 Ratio<T> Ratio<T>::operator/(const Ratio<T>& r){
-	return Ratio<T>((this->_numerator * r._denominator), (this->_denominator * r._numerator));
+	Ratio<T> result((this->_numerator * r._denominator), (this->_denominator * r._numerator));
+	result.reduce() ; 
+	return result; 
 }
 
 
@@ -232,7 +256,9 @@ T Ratio<T>::convert_ratio_to_T(){
 
 template<typename T>
 Ratio<T> Ratio<T>::inverse() {
-	return Ratio<T>(this->_denominator, this->_numerator) ; 
+	Ratio<T> result (this->_denominator, this->_numerator) ; 
+	result.reduce() ; 
+	return result; 
 }
 
 
@@ -260,7 +286,9 @@ Ratio<T> Ratio<T>::convert_float_to_ratio(const float x, const int nb_iter){
 		return Ratio<T>(1.0,(convert_float_to_ratio((float)1.0/x, nb_iter).convert_ratio_to_T())); 
 	}
 	float q = (int)x; 
-	return Ratio<T>(Ratio<T>(q,1.0) + convert_float_to_ratio(x-q, nb_iter-1)); 
+	Ratio<T> result(Ratio<T>(q,1.0) + convert_float_to_ratio(x-q, nb_iter-1)); 
+	result.reduce() ; 
+	return result; 
 }
 /*
 template<typename T, typename U>
@@ -271,180 +299,3 @@ Ratio<T> Ratio<T>::pow(const Ratio<T>& r, const U n) {
 }*/
 
  
-
-
-/*
-    // constructor and default constructor
-    Ratio(const size_t size=0, const T value = 0.0);
-
-    // copy constructor
-	Ratio(const Ratio &v) = default;
-    
-    // copy constructor other type 
-    template<typename U>
-	Ratio<T>(const Ratio<U> &vec) : Ratio<T>(vec.size()){
-		for(size_t i=0; i<vec.size(); ++i)
-			m_data[i] = static_cast<T>(vec[i]); 
-	}
-
-    // destructor
-    ~Ratio() = default;
-
-    // methods
-    void display() const;
-    T dot(const Ratio &v) const;
-    inline T norm() const { return sqrt(this->dot(*this)); }
-    inline size_t size() const { return m_data.size() ; }
-
-    // operators
-    Ratio& operator=(const Ratio &vec);
-    Ratio operator+ (const Ratio& vec) ; 
-    Ratio operator- (const Ratio& vec) ; 
-    Ratio operator* (const Ratio& vec) ; 
-    Ratio operator* (const int nb) ; 
-    Ratio operator- () ; 
-
-    const T& operator[](const size_t& i) const;
-    T& operator[](const size_t& i);
-
-    bool save(const std::string &filename) const;
-
-};
-
-template<typename T>
-Ratio<T>::Ratio(const size_t size, const T value) 
-: m_data(size,value) 
-{}
-
-template<typename T>
-Ratio<T>& Ratio<T>::operator=(const Ratio<T> &vec)
-{
-	if(&vec == this) return *this;
-
-	m_data = vec.m_data;
-
-	return *this;
-}
-
-template<typename T>
-Ratio<T> Ratio<T>::operator+ (const Ratio<T>& vec) {
-	assert(m_data.size() == vec.size());
-
-	Ratio v3(vec.size()) ;
-
-	for(size_t i=0; i< vec.size(); ++i){
-		v3[i] = m_data[i] + vec[i] ; 
-	}
-	return v3 ; 
-}
-
-template<typename T>
-Ratio<T> Ratio<T>::operator- (const Ratio<T>& vec) {
-	assert(m_data.size() == vec.size());
-
-	Ratio v3(vec.size()) ;
-
-	for(size_t i=0; i< vec.size(); ++i){
-		v3[i] = m_data[i] - vec[i] ; 
-	}
-	return v3 ; 
-}
-
-template<typename T>
-Ratio<T> Ratio<T>::operator- () {
-
-	Ratio v3(m_data.size()) ;
-
-	for(size_t i=0; i< m_data.size(); ++i){
-		v3[i] = - m_data[i] ; 
-	}
-	return v3 ; 
-}
-
-template<typename T>
-Ratio<T> Ratio<T>::operator* (const Ratio<T>& vec) {
-	assert(m_data.size() == vec.size());
-
-	Ratio v3(vec.size()) ;
-
-	for(size_t i=0; i< vec.size(); ++i){
-		v3[i] = m_data[i] * vec[i] ; 
-	}
-	return v3 ; 
-}
-
-template<typename T>
-Ratio<T> Ratio<T>::operator* (const int nb) {
-
-	Ratio v3(m_data.size()) ;
-
-	for(size_t i=0; i< m_data.size(); ++i){
-		v3[i] = m_data[i] * nb; 
-	}
-	return v3 ; 
-}
-
-template<typename T>
-const T& Ratio<T>::operator[](const size_t& i) const{
-    return m_data[i]; 
-}
-
-template<typename T>
-T& Ratio<T>::operator[](const size_t& i){
-    return m_data[i]; 
-}
-
-template<typename T>
-void Ratio<T>::display() const {
-	for(size_t i=0; i< m_data.size(); ++i)
-		std::cout << m_data[i] << " ";
-	std::cout << std::endl;
-}
-
-template<typename T>
-bool Ratio<T>::save(const std::string &filename) const{
-
-	//open the file
-	std::ofstream myfile;
-	myfile.open(filename, std::ios::out | std::ios::binary);
-	
-	if(!myfile.is_open()){
-		std::cerr << "error: can not create file: " << filename << std::endl;
-		return false;
-	}
-
-	// write the vector size
-	myfile << size() << std::endl;
-
-	for(size_t i=0; i<size(); ++i)
-		myfile << m_data[i] << " ";
-
-	myfile.close();
-
-	return true;
-}
-
-template<typename T>
-T Ratio<T>::dot(const Ratio<T> & vec) const {
-	assert(m_data.size() == vec.m_data.size());
-
-	T result = 0.0;
-	for(size_t i=0; i<m_data.size(); ++i)
-		result += m_data[i] * vec.m_data[i];
-
-	return result;
-}
-
-template<typename T>
-std::ostream& operator<< (std::ostream& stream, const Ratio<T>& v) {
-	for(size_t i=0; i< v.size(); ++i){
-		stream << v[i] << " "; 
-	}
-	return stream ; 
-}
-
-template<typename T>
-std::ostream& operator<< (std::ostream& stream, const Ratio<T>& v) ;
-
-*/
-
