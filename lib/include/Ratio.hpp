@@ -217,6 +217,14 @@ Ratio<T> Ratio<T>::operator* (const Ratio<T>& r) {
 	return result; 
 }
 
+template<typename T>
+Ratio<T> Ratio<T>::operator* (const int nb){
+	Ratio<T> result((this->_numerator*nb),(this->_denominator));
+	result.reduce();
+	return result;
+
+}
+
 
 template<typename T>
 Ratio<T> Ratio<T>::operator/(const Ratio<T>& r){
