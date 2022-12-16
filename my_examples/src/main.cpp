@@ -8,6 +8,7 @@ int main() {
     Ratio<int> r(-4,6) ; 
     Ratio<int> r2(2,10) ; 
     std::cout << r+r2 << std::endl ; 
+    std::cout<< "ok" << std::endl;
 
  //   Ratio<int> r3 ; 
    // std::cout << r3.get_numerator() << std::endl ; 
