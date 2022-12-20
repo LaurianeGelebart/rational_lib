@@ -14,17 +14,24 @@ TEST (RatioConstructor, defaultConstructor) {
 	ASSERT_NE (r.get_denominator(), 0);
 }
 
+TEST (RatioConstructor, constructorInt) { 
+	Ratio<int> r(2,6);
+	ASSERT_NE (r.get_denominator(), 2);
+
+}
+
 
 /*------------------- OPERATOR ---------------------*/
 
 
-TEST (VectorDArithmetic, multiplication) {
-	const size_t maxSize = 100;  
-	std::mt19937 generator(0);
-	std::uniform_int_distribution<int> uniformIntDistribution(1,maxSize);
+TEST (RatioArithmetic, multiplication) {
+	const size_t maxSize = 1000;  
+	const size_t minSize = -1000;  
+	std::mt19937 generator(3);
+	std::uniform_int_distribution<int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
-	int nbTest = 100 ; 
+	int nbTest =100 ; 
 	Ratio<int> r1, r2, r3;
 
 	std::vector<int> data1(nbTest), data2(nbTest), data3(nbTest), data4(nbTest);
@@ -50,13 +57,14 @@ TEST (VectorDArithmetic, multiplication) {
 
 }
 
-TEST (VectorDArithmetic, addition) {
-	const size_t maxSize = 100;  
-	std::mt19937 generator(0);
-	std::uniform_int_distribution<int> uniformIntDistribution(1,maxSize);
+TEST (RatioArithmetic, addition) {
+	const size_t maxSize = 1000;  
+	const size_t minSize = -1000;  
+	std::mt19937 generator(3);
+	std::uniform_int_distribution<int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
-	int nbTest = 100 ; 
+	int nbTest =100 ; 
 	Ratio<int> r1, r2, r3;
 
 	std::vector<int> data1(nbTest), data2(nbTest), data3(nbTest), data4(nbTest);
@@ -82,13 +90,14 @@ TEST (VectorDArithmetic, addition) {
 
 }
 
-TEST (VectorDArithmetic, division) {
-	const size_t maxSize = 100;  
-	std::mt19937 generator(0);
-	std::uniform_int_distribution<int> uniformIntDistribution(1,maxSize);
+TEST (RatioArithmetic, division) {
+	const size_t maxSize = 1000;  
+	const size_t minSize = -1000;  
+	std::mt19937 generator(3);
+	std::uniform_int_distribution<int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
-	int nbTest = 100 ; 
+	int nbTest =100 ; 
 	Ratio<int> r1, r2, r3;
 
 	std::vector<int> data1(nbTest), data2(nbTest), data3(nbTest), data4(nbTest);
@@ -110,6 +119,88 @@ TEST (VectorDArithmetic, division) {
 
 		ASSERT_EQ (r3.get_numerator(), num/pgcd);
 		ASSERT_EQ (r3.get_denominator(), den/pgcd);
+	}
+
+}
+
+
+/*------------------- METHODE ---------------------*/
+
+TEST (RatioMethode, reduce) {
+	const size_t maxSize = 1000;  
+	const size_t minSize = -1000;  
+	std::mt19937 generator(3);
+	std::uniform_int_distribution<int> uniformIntDistribution(minSize,maxSize);
+	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
+
+	int nbTest =100 ; 
+	Ratio<int> r1, r2;
+
+	std::vector<int> data1(nbTest), data2(nbTest);
+	std::generate(data1.begin(), data1.end(), gen);
+	std::generate(data2.begin(), data2.end(), gen);
+
+	for(int run=0; run<nbTest; ++run){
+		r1.set_numerator(data1[run]) ;
+		r1.set_denominator(data2[run]) ; 
+		r2 = r1 ; 
+
+		r1.reduce() ;
+		
+		ASSERT_EQ (r1.convert_ratio_to_float(), r2.convert_ratio_to_float());
+	}
+
+}
+
+TEST (RatioMethode, inverse) {
+	const size_t maxSize = 1000;  
+	const size_t minSize = -1000;  
+	std::mt19937 generator(3);
+	std::uniform_int_distribution<int> uniformIntDistribution(minSize,maxSize);
+	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
+
+	int nbTest =100 ; 
+	Ratio<int> r1, r2;
+
+	std::vector<int> data1(nbTest), data2(nbTest);
+	std::generate(data1.begin(), data1.end(), gen);
+	std::generate(data2.begin(), data2.end(), gen);
+
+	for(int run=0; run<nbTest; ++run){
+		r1.set_numerator(data1[run]) ;
+		r1.set_denominator(data2[run]) ; 
+
+		r2 = r1.inverse() ;
+		r1.reduce(); 
+		
+		ASSERT_EQ (r2.get_numerator(), r1.get_denominator());
+		ASSERT_EQ (r2.get_denominator(), r1.get_numerator());
+	}
+
+}
+
+TEST (RatioMethode, float_to_ratio) {
+	const size_t maxSize = 1000;  
+	const size_t minSize = -1000;  
+	std::mt19937 generator(3);
+	std::uniform_int_distribution<int> uniformIntDistribution(minSize,maxSize);
+	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
+
+	int nbTest =100 ; 
+	Ratio<int> r1;
+	float f ; 
+
+	std::vector<int> data1(nbTest), data2(nbTest), data3(nbTest), data4(nbTest);
+	std::generate(data1.begin(), data1.end(), gen);
+	std::generate(data2.begin(), data2.end(), gen);
+
+	for(int run=0; run<nbTest; ++run){
+		r1.set_numerator(data1[run]) ;
+		r1.set_denominator(data2[run]) ;
+
+		f = (float)data1[run]/(float)data2[run]; 
+		
+		ASSERT_EQ (r1.convert_ratio_to_float(), f);
 	}
 
 }

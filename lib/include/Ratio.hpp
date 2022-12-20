@@ -7,6 +7,7 @@
 #include <cassert>
 
 
+
 /// @class Ratio 
 /// @brief class defining a ratio to represent a real number by a quotient of 2 integers
 /// @tparam T can be : int, long int
@@ -108,14 +109,28 @@ public :
 		return (this->_numerator < static_cast<T>(0)) ? Ratio<T>( -this->_numerator , this->_denominator) : Ratio<T>(this->_numerator, this->_denominator) ;
 	}
 
-	/// @brief convert a ratio to a real rumber 
-	/// @return the ratio converted into a real
+/* -----Lequel est le mieux ?-------
+template<typename T>
+Ratio<T> Ratio<T>::abs() {
+	return Ratio<T>( std::abs(this->_numerator) , this->_denominator); 
+}*/
+
+
+	/// @brief convert a ratio to a T rumber 
+	/// @return the ratio converted into a T
 	T convert_ratio_to_T();
+
+	/// @brief convert a ratio to a float rumber 
+	/// @return the ratio converted into a flot
+	float convert_ratio_to_float();
 
 	/// @brief inverse a ratio 
 	/// @return the inverted ratio 
 	Ratio inverse() ; 
 
+	Ratio round() ;
+
+	Ratio trunc() ;  
 
 /*------------------- STATIC METHODES ---------------------*/
 
@@ -139,6 +154,7 @@ public :
 
 	// c'est en cours pas touche 
 	static Ratio pow(const Ratio& r, const int n); 
+	
 
 
 
@@ -160,7 +176,9 @@ public :
 template<typename T>
 Ratio<T>::Ratio(const T num, const T den) 
 : _numerator(num), _denominator(den)
-{}
+{
+	 static_assert(std::is_integral<T>::value, "Integral required.");
+}
 
 //--------------------------Getters------------------------------//
 
@@ -242,12 +260,6 @@ void Ratio<T>::reduce() {
 	this->_denominator = this->_denominator/pgcd; 
 }
 
-/* -----Lequel est le mieux ?-------
-template<typename T>
-Ratio<T> Ratio<T>::abs() {
-	return Ratio<T>( std::abs(this->_numerator) , this->_denominator); 
-}*/
-
 
 template<typename T>
 T Ratio<T>::convert_ratio_to_T(){
@@ -255,11 +267,48 @@ T Ratio<T>::convert_ratio_to_T(){
 }
 
 template<typename T>
+float Ratio<T>::convert_ratio_to_float(){
+	return (float)((float)this->_numerator / (float)this->_denominator) ; 
+}
+
+template<typename T>
 Ratio<T> Ratio<T>::inverse() {
+	assert( (this->_denominator != 0) && "error: the denominator is null, impossible to inverse inf");
+	assert( (this->_numerator != 0) && "error: the numerator is null, impossible to inverse this ratio");
 	Ratio<T> result (this->_denominator, this->_numerator) ; 
 	result.reduce() ; 
 	return result; 
 }
+/*
+template<typename T>
+Ratio<T> Ratio<T>::round(){
+	const Ratio<T> zero = Ratio<T>::zero();
+	const T one(1);
+	const T two(one + one);
+
+	Ratio<T> fractional = fract(r);
+	if(fractional < zero) {
+		fractional = zero - fractional;
+	}
+
+	const bool half_or_larger;
+	if(fractional.denom % 2 == 0) {
+		half_or_larger = fractional.numer >= fractional.denom / two;
+	} else {
+		half_or_larger = fractional.numer >= (fractional.denom / two) + one;
+	}
+
+	if(half_or_larger) {
+		if(is_positive(r)) {
+			return trunc(r) + Ratio<T>::one();
+		} else {
+			return trunc(r) - Ratio<T>::one();
+		}
+	} else {
+		return trunc(r);
+	}
+}*/
+
 
 
 
@@ -283,19 +332,25 @@ template<typename T>
 Ratio<T> Ratio<T>::convert_float_to_ratio(const float x, const int nb_iter){
 	if (x==0 || nb_iter==0) return zero() ;
 	if(x<1){
-		return Ratio<T>(1.0,(convert_float_to_ratio((float)1.0/x, nb_iter).convert_ratio_to_T())); 
+		return Ratio<T>(1.0,(convert_float_to_ratio((float)1.0/x, nb_iter).convert_ratio_to_float())); 
 	}
 	float q = (int)x; 
 	Ratio<T> result(Ratio<T>(q,1.0) + convert_float_to_ratio(x-q, nb_iter-1)); 
 	result.reduce() ; 
 	return result; 
 }
-/*
-template<typename T, typename U>
-Ratio<T> Ratio<T>::pow(const Ratio<T>& r, const U n) {
-	if(n==0) return one() ;
-	Ratio<T> result = r * pow(r, std::abs(n-1));
-	return (n<0) ? inverse(result) : result;
-}*/
+// cf.std::is_floting-point<T> value
+
+template<typename T>
+Ratio<T> Ratio<T>::pow(const Ratio<T>& r, const int n) {
+	if(n==0) return Ratio<T>::one() ;
+	Ratio<T> result = r;
+	for (size_t i = 0; i <  std::abs(n-1); i++){
+		result = result*r ; 
+	}
+	result.reduce() ; 
+	if (n<0) result = result.inverse();
+	return result; 
+}
 
  
