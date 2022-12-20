@@ -243,45 +243,38 @@ Ratio<T> Ratio<T>::operator/(const Ratio<T>& r){
 //Faire test unitaire
 template<typename T>
 bool Ratio<T>::operator== (const Ratio& r){
-	if(this->_numerator == r._numerator && this->_denominator == r._denominator) return true;
-	else return false;
+	return this->_numerator == r._numerator && this->_denominator == r._denominator ? true : false;
 }
 
 //Faire Test unitaire
 template<typename T>
 bool Ratio<T>::operator!= (const Ratio& r){
-	if(this->_numerator != r._numerator && this->_denominator != r._denominator) return true;
-	else return false;
+	return this->_numerator != r._numerator && this->_denominator != r._denominator ? true : false;
 }
 
 //Faire Test unitaire
 template<typename T>
 bool Ratio<T>::operator<= (const Ratio& r){
-	if(this->_numerator <= r._numerator && this->_denominator <= r._denominator) return true;
-	else return false;
-	
+	return this->_numerator <= r._numerator && this->_denominator <= r._denominator ? true : false;
 	
 }
 
 //Faire Test unitaire
 template<typename T>
 bool Ratio<T>::operator>= (const Ratio& r){
-	if(this->_numerator >= r._numerator && this->_denominator >= r._denominator) return true;
-	else return false;
+	return this->_numerator >= r._numerator && this->_denominator >= r._denominator ? true : false;
 }
 
 //Faire Test Unitaire
 template<typename T>
 bool Ratio<T>::operator< (const Ratio& r){
-	if(this->_numerator < r._numerator && this->_denominator < r._denominator) return true;
-	else return false;
+	return this->_numerator < r._numerator && this->_denominator < r._denominator ? true : false;
 }
 
 //Faire Test Unitaire
 template<typename T>
 bool Ratio<T>::operator> (const Ratio& r){
-	if(this->_numerator > r._numerator && this->_denominator > r._denominator) return true;
-	else return false;
+	return this->_numerator > r._numerator && this->_denominator > r._denominator ? true : false;
 }
 
 

@@ -2,13 +2,13 @@
 
 #include "Ratio.hpp"
 
-//fady's token : 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
+//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
 
 int main() {
 
     Ratio<int> r(-4,6) ; 
     Ratio<int> r2(2,10) ; 
-    if (r < r2)
+    if (r == r2)
     {
       std::cout<<"ok"<<std::endl;
     }
