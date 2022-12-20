@@ -152,7 +152,10 @@ Ratio<T> Ratio<T>::abs() {
 	/// @return  the real converted into a rational 
 	static Ratio convert_float_to_ratio(const float x, const int nb_iter) ;  
 
-	// c'est en cours pas touche 
+	/// @brief pow function
+	/// @param r ratio
+	/// @param n exponent 
+	/// @return the ratio to the power n
 	static Ratio pow(const Ratio& r, const int n); 
 	
 
@@ -279,38 +282,6 @@ Ratio<T> Ratio<T>::inverse() {
 	result.reduce() ; 
 	return result; 
 }
-/*
-template<typename T>
-Ratio<T> Ratio<T>::round(){
-	const Ratio<T> zero = Ratio<T>::zero();
-	const T one(1);
-	const T two(one + one);
-
-	Ratio<T> fractional = fract(r);
-	if(fractional < zero) {
-		fractional = zero - fractional;
-	}
-
-	const bool half_or_larger;
-	if(fractional.denom % 2 == 0) {
-		half_or_larger = fractional.numer >= fractional.denom / two;
-	} else {
-		half_or_larger = fractional.numer >= (fractional.denom / two) + one;
-	}
-
-	if(half_or_larger) {
-		if(is_positive(r)) {
-			return trunc(r) + Ratio<T>::one();
-		} else {
-			return trunc(r) - Ratio<T>::one();
-		}
-	} else {
-		return trunc(r);
-	}
-}*/
-
-
-
 
 //--------------------------static------------------------------//
 template<typename T>

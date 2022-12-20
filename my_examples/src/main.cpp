@@ -20,14 +20,11 @@ int main() {
  //  Ratio<int> r3 = Ratio<int>::convert_float_to_ratio(0.00000000029304973, 3) ; 
 
    // La ça marche  
- //  Ratio<int> r3 = Ratio<int>::convert_float_to_ratio(298910949.3, 3) ; 
+ //  Ratio<int> r3 = Ratio<int>::convert_float_to_ratio(298910944.3, 3) ; 
   // Là ça ne marche pas  
- //  Ratio<int> r3 = Ratio<int>::convert_float_to_ratio(2989810949.3, 3) ; 
+ //  Ratio<int> r3 = Ratio<int>::convert_float_to_ratio(2989810944.3, 3) ; 
 
-     // La ça marche  
- //  Ratio<int> r3 = Ratio<int>::convert_float_to_ratio(298910949.3, 3) ; 
-  // Là ça ne marche pas  
-   Ratio<int> r3 = Ratio<int>::convert_float_to_ratio(298910949.13, 27) ; 
+
  
   std::cout << r3 << std::endl ; 
 
