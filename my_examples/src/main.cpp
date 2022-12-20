@@ -6,12 +6,14 @@
 
 int main() {
 
-    Ratio<int> r(-4,6) ; 
-    Ratio<int> r2(2,10) ; 
-    if (r == r2)
-    {
-      std::cout<<"ok"<<std::endl;
-    }
+  Ratio<int> r(4,8) ; 
+  Ratio<int> r2(6,4) ; 
+  Ratio<int> result;
+
+  result = r-r2;
+
+  std::cout<<result<<std::endl;
+
     
     
 
