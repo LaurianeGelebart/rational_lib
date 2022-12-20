@@ -73,6 +73,9 @@ public :
     /// @return the multiplication of the current ratio and the argument ratio
     Ratio operator* (const Ratio& r) ; 
 
+    /// @brief multiply a rational and a int
+    /// @param nb int to multiply to the calling ratio
+    /// @return the multiplication of the current ratio and the argument int
     Ratio operator* (const int nb) ; 
 
     /// @brief divide 2 ratio of the same type
@@ -142,7 +145,7 @@ public :
 
 
 
-/*------------------- FRIENDS METODES ---------------------*/
+/*------------------- FRIENDS METHODES ---------------------*/
 
 	/// \brief overload the operator << for ratio
     /// \param stream : input stream
@@ -217,6 +220,7 @@ Ratio<T> Ratio<T>::operator* (const Ratio<T>& r) {
 	return result; 
 }
 
+//Faire Test unitaire
 template<typename T>
 Ratio<T> Ratio<T>::operator* (const int nb){
 	Ratio<T> result((this->_numerator*nb),(this->_denominator));
@@ -226,11 +230,58 @@ Ratio<T> Ratio<T>::operator* (const int nb){
 }
 
 
+
+
+
 template<typename T>
 Ratio<T> Ratio<T>::operator/(const Ratio<T>& r){
 	Ratio<T> result((this->_numerator * r._denominator), (this->_denominator * r._numerator));
 	result.reduce() ; 
 	return result; 
+}
+
+//Faire test unitaire
+template<typename T>
+bool Ratio<T>::operator== (const Ratio& r){
+	if(this->_numerator == r._numerator && this->_denominator == r._denominator) return true;
+	else return false;
+}
+
+//Faire Test unitaire
+template<typename T>
+bool Ratio<T>::operator!= (const Ratio& r){
+	if(this->_numerator != r._numerator && this->_denominator != r._denominator) return true;
+	else return false;
+}
+
+//Faire Test unitaire
+template<typename T>
+bool Ratio<T>::operator<= (const Ratio& r){
+	if(this->_numerator <= r._numerator && this->_denominator <= r._denominator) return true;
+	else return false;
+	
+	
+}
+
+//Faire Test unitaire
+template<typename T>
+bool Ratio<T>::operator>= (const Ratio& r){
+	if(this->_numerator >= r._numerator && this->_denominator >= r._denominator) return true;
+	else return false;
+}
+
+//Faire Test Unitaire
+template<typename T>
+bool Ratio<T>::operator< (const Ratio& r){
+	if(this->_numerator < r._numerator && this->_denominator < r._denominator) return true;
+	else return false;
+}
+
+//Faire Test Unitaire
+template<typename T>
+bool Ratio<T>::operator> (const Ratio& r){
+	if(this->_numerator > r._numerator && this->_denominator > r._denominator) return true;
+	else return false;
 }
 
 
@@ -298,6 +349,7 @@ Ratio<T> Ratio<T>::convert_float_to_ratio(const float x, const int nb_iter){
 	result.reduce() ; 
 	return result; 
 }
+
 /*
 template<typename T, typename U>
 Ratio<T> Ratio<T>::pow(const Ratio<T>& r, const U n) {

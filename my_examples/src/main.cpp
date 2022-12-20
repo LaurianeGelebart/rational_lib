@@ -8,7 +8,11 @@ int main() {
 
     Ratio<int> r(-4,6) ; 
     Ratio<int> r2(2,10) ; 
-    std::cout << r+r2 << std::endl ; 
+    if (r < r2)
+    {
+      std::cout<<"ok"<<std::endl;
+    }
+    
     
 
  //   Ratio<int> r3 ; 
