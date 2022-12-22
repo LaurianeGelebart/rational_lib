@@ -14,11 +14,6 @@ int main() {
 
   std::cout<<result<<std::endl;
 
-    
-    
-    Ratio<int> r(-4,6) ; 
-    Ratio<int> r2(20,100) ; 
-
 
 
 
@@ -36,8 +31,16 @@ int main() {
  //  Ratio<int> r3 = Ratio<int>::convert_float_to_ratio(2989810944.3, 3) ; 
 
 
+
+   Ratio<int> r3 = Ratio<int>::convert_float_to_ratio(-2, 3) ; 
+
  
   std::cout << r3 << std::endl ; 
+
+  Ratio<int> r4 = Ratio<int>(3,0); 
+
+  std::cout << std::pow(std::exp(3),3.0/0.0) << std::endl ; 
+  std::cout << Ratio<int>::exp(r4) << std::endl ; 
 
 
 

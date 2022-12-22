@@ -102,38 +102,34 @@ public :
 	/// @brief display the ratio
     void display() const;
 
-	/// @brief reduce a ratio to its irreducible form
+	/// @brief reduce the ratio to its irreducible form
 	void reduce(); 
+
+	/// @brief if the ratio is negative, put the sign on the numerator
+	void set_minus(); 
 
 	/// @brief find the absolute value of a ratio 
     /// @return the absolute value the calling ratio 
 	constexpr Ratio abs() 
 	noexcept{
-		return (this->_numerator < static_cast<T>(0)) ? Ratio<T>( -this->_numerator , this->_denominator) : Ratio<T>(this->_numerator, this->_denominator) ;
+		return Ratio<T>( std::abs(this->_numerator) , this->_denominator); 
 	}
 
 /* -----Lequel est le mieux ?-------
 template<typename T>
 Ratio<T> Ratio<T>::abs() {
-	return Ratio<T>( std::abs(this->_numerator) , this->_denominator); 
+	return (this->_numerator < static_cast<T>(0)) ? Ratio<T>( -this->_numerator , this->_denominator) : Ratio<T>(this->_numerator, this->_denominator) ;	
 }*/
 
 
-	/// @brief convert a ratio to a T rumber 
-	/// @return the ratio converted into a T
-	T convert_ratio_to_T();
-
 	/// @brief convert a ratio to a float rumber 
-	/// @return the ratio converted into a flot
+	/// @return the ratio converted into a float
 	float convert_ratio_to_float();
 
 	/// @brief inverse a ratio 
 	/// @return the inverted ratio 
 	Ratio inverse() ; 
 
-	Ratio round() ;
-
-	Ratio trunc() ;  
 
 /*------------------- STATIC METHODES ---------------------*/
 
@@ -141,11 +137,11 @@ Ratio<T> Ratio<T>::abs() {
 	/// @return 0.0/1.0
 	static Ratio zero(); 
 
-	/// @brief the rational of one
+	/// @brief the rational corresponding to the value one
 	/// @return 1.0/1.0
 	static Ratio one(); 
 
-	/// @brief the rational of infinity
+	/// @brief the rational correspondind to infinity
 	/// @return 1.0/0.0
 	static Ratio inf(); 
 
@@ -155,11 +151,37 @@ Ratio<T> Ratio<T>::abs() {
 	/// @return  the real converted into a rational 
 	static Ratio convert_float_to_ratio(const float x, const int nb_iter) ;  
 
-	/// @brief pow function
-	/// @param r ratio
+	/// @brief calcul a ratio to the power n 
+	/// @param r a ratio
 	/// @param n exponent 
 	/// @return the ratio to the power n
 	static Ratio pow(const Ratio& r, const int n); 
+
+	/// @brief calcul the exponantial of a ratio
+	/// @param r a ratio 
+	/// @return a float corresponding to the the exponantial of the ratio
+	static float exp(const Ratio& r); 
+
+	/// @brief calcul the logarithm of a ratio
+	/// @param r a ratio 
+	/// @return a float corresponding to the the logarithm of the ratio
+	static float log(const Ratio& r);
+
+	/// @brief calcul the square root of a ratio
+	/// @param r a ratio
+	/// @return a float corresponding to the square root of the ratio 
+	static float sqrt(Ratio r);
+
+	/// @brief 
+	/// @param r a ratio 
+	/// @param n 
+	/// @return 
+	static float find_name(Ratio r, const int n) ; 
+
+
+	static float cos(const Ratio& r); // A faire 
+
+
 	
 
 
@@ -171,8 +193,7 @@ Ratio<T> Ratio<T>::abs() {
     /// \param r : the ratio to output
     /// \return the output stream containing the ratio data
 	friend std::ostream& operator<< (std::ostream& stream, const Ratio<T>& r) {			
-		stream << r._numerator << "/" << r._denominator ;
-		return stream;
+		return (r._denominator == 0) ? stream << "inf" : stream << r._numerator << "/" << r._denominator ; 
 	}; 
 
 };	
@@ -180,10 +201,11 @@ Ratio<T> Ratio<T>::abs() {
 
 //--------------------------Constructor------------------------------//
 template<typename T>
-Ratio<T>::Ratio(const T num, const T den) 
-: _numerator(num), _denominator(den)
-{
+Ratio<T>::Ratio(const T num, const T den) {
 	 static_assert(std::is_integral<T>::value, "Integral required.");
+	 //assert( (this->_denominator != 0) && "error: the denominator can't be null");
+	 this->_numerator = num ; 
+	 this->_denominator = den ; 
 }
 
 //--------------------------Getters------------------------------//
@@ -257,10 +279,6 @@ Ratio<T> Ratio<T>::operator* (const int nb){
 
 }
 
-
-
-
-
 template<typename T>
 Ratio<T> Ratio<T>::operator/(const Ratio<T>& r){
 	Ratio<T> result((this->_numerator * r._denominator), (this->_denominator * r._numerator));
@@ -311,7 +329,8 @@ bool Ratio<T>::operator> (const Ratio& r){
 //--------------------------Methodes------------------------------//
 template<typename T>
 void Ratio<T>::display() const {
-	std::cout << _numerator << "/" << _denominator << std::endl;
+	if (this->_denominator == 0)  std::cout << "inf" << std::endl ; 
+	else std::cout << this->_denominator << "/" << this->_denominator << std::endl;
 }
 
 
@@ -322,10 +341,13 @@ void Ratio<T>::reduce() {
 	this->_denominator = this->_denominator/pgcd; 
 }
 
-
-template<typename T>
-T Ratio<T>::convert_ratio_to_T(){
-	return (T)((T)this->_numerator / (T)this->_denominator) ; 
+template<typename T> 
+void Ratio<T>::set_minus(){
+	if((this->_numerator() > 0 && this->_denominator() < 0 )
+	|| (this->_numerator() < 0 && this->_denominator() < 0 ) ){
+		this->_numerator = -this->_numerator ; 
+		this->_denominator = -this->_denominator ; 
+	}
 }
 
 template<typename T>
@@ -341,6 +363,7 @@ Ratio<T> Ratio<T>::inverse() {
 	result.reduce() ; 
 	return result; 
 }
+
 
 //--------------------------static------------------------------//
 template<typename T>
@@ -361,6 +384,9 @@ Ratio<T> Ratio<T>::inf(){
 template<typename T>
 Ratio<T> Ratio<T>::convert_float_to_ratio(const float x, const int nb_iter){
 	if (x==0 || nb_iter==0) return zero() ;
+	if (x<0){
+        return -(convert_float_to_ratio(-x,nb_iter));
+    }
 	if(x<1){
 		return Ratio<T>(1.0,(convert_float_to_ratio((float)1.0/x, nb_iter).convert_ratio_to_float())); 
 	}
@@ -369,9 +395,9 @@ Ratio<T> Ratio<T>::convert_float_to_ratio(const float x, const int nb_iter){
 	result.reduce() ; 
 	return result; 
 }
-// cf.std::is_floting-point<T> value
 
-template<typename T>
+//------- souvenir de pow sans std pour le rapport ----------//
+/*template<typename T>
 Ratio<T> Ratio<T>::pow(const Ratio<T>& r, const int n) {
 	if(n==0) return Ratio<T>::one() ;
 	Ratio<T> result = r;
@@ -381,6 +407,37 @@ Ratio<T> Ratio<T>::pow(const Ratio<T>& r, const int n) {
 	result.reduce() ; 
 	if (n<0) result = result.inverse();
 	return result; 
+}*/
+
+template<typename T>
+Ratio<T> Ratio<T>::pow(const Ratio<T>& r, const int n) {
+	if(n==0) return Ratio<T>::one() ;
+	Ratio<T> result = Ratio<T>(std::pow(r._numerator, n), std::pow(r._denominator, n)); 
+	result.reduce() ; 
+	return result; 
 }
 
- 
+template<typename T>
+float Ratio<T>::exp(const Ratio<T>& r){
+    return std::pow(std::exp(r._numerator), 1.0/(float)(r._denominator));
+}
+
+template<typename T>
+float Ratio<T>::find_name(Ratio<T> r, const int n){
+	assert( (r._numerator > 0 || r._denominator > 0) && "error: find_name impossible under 1. ");
+    return std::pow(r.convert_ratio_to_float(), 1.0/(float)n);
+}
+
+template<typename T>
+float Ratio<T>::sqrt(Ratio<T> r){
+	assert( (r._numerator > 0 || r._denominator > 0) && "error: square root impossible under 1. ");
+    return std::pow(r.convert_ratio_to_float(), 1.0/(float)2);
+   // return  std::sqrt(r._numerator) / std::sqrt(r._denominator); C'est quoi le mieux ?
+}
+
+template<typename T>
+float Ratio<T>::log(const Ratio<T> &r){
+	assert( (r._numerator > 0 || r._denominator > 0) && "error: log impossible under 1.");
+    return std::log(r._numerator) - std::log(r._denominator);
+}
+
