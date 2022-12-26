@@ -179,8 +179,16 @@ Ratio<T> Ratio<T>::abs() {
 	static float find_name(Ratio r, const int n) ; 
 
 
-	static float cos(const Ratio& r); // A faire 
+	static float cos(const Ratio& r);
 
+	/// @brief calculate the factorial of integer
+	/// @return factorial of n	
+	static int factorial(int n);
+
+	/// @brief cos function
+	/// @param r ratio
+	/// @return the cos of a ratio
+	static float taylor_cos(const Ratio& r);
 
 	
 
@@ -298,29 +306,28 @@ bool Ratio<T>::operator!= (const Ratio& r){
 	return this->_numerator != r._numerator && this->_denominator != r._denominator ? true : false;
 }
 
-//Faire Test unitaire
 template<typename T>
 bool Ratio<T>::operator<= (const Ratio& r){
-	return this->_numerator <= r._numerator && this->_denominator <= r._denominator ? true : false;
-	
+	Ratio<T> result = (*this - r);
+	return result._numerator <= 0  ? true : false;
 }
 
-//Faire Test unitaire
 template<typename T>
 bool Ratio<T>::operator>= (const Ratio& r){
-	return this->_numerator >= r._numerator && this->_denominator >= r._denominator ? true : false;
+	Ratio<T> result = (*this - r);
+	return result._numerator >= 0 ? true : false;
 }
 
-//Faire Test Unitaire
 template<typename T>
 bool Ratio<T>::operator< (const Ratio& r){
-	return this->_numerator < r._numerator && this->_denominator < r._denominator ? true : false;
+	Ratio<T> result = (*this - r);
+	return result._numerator < 0  ? true : false;
 }
 
-//Faire Test Unitaire
 template<typename T>
 bool Ratio<T>::operator> (const Ratio& r){
-	return this->_numerator > r._numerator && this->_denominator > r._denominator ? true : false;
+	Ratio<T> result = (*this - r);
+	return result._numerator > 0 ? true : false;
 }
 
 
@@ -441,3 +448,24 @@ float Ratio<T>::log(const Ratio<T> &r){
     return std::log(r._numerator) - std::log(r._denominator);
 }
 
+template<typename T>
+int Ratio<T>::factorial(int n){
+	return n<=1 ? 1 : n*factorial(n-1);
+}
+
+template<typename T>
+float Ratio<T>::taylor_cos(const Ratio& r){
+	float result = 0.; 
+	Ratio<T> r1(-1,1);
+	int n = 16;
+	for (int i = 0; i < n; i++)
+	{
+		result = result + (pow(r1, i)*pow(r, 2*i)).convert_ratio_to_float()/factorial(2*i); 
+	}
+	return result;
+}
+
+template<typename T>
+float Ratio<T>::cos(const Ratio& r){
+	return std::cos(r.convert_ratio_to_float()); 
+}
