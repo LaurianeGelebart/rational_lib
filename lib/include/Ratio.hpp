@@ -47,12 +47,12 @@ public :
 	/// @return denominator of the current ratio
 	T get_denominator(); 
 
-	/// @brief 
-	/// @param num 
+	/// @brief setter of the ratio numerator
+	/// @param num numerator of the current ratio
 	void set_numerator(T num) ; 
 
-	/// @brief 
-	/// @param den 
+	/// @brief setter of the ratio denominator 
+	/// @param den denominator of the current ratio
 	void set_denominator(T den) ; 
 
 
@@ -71,18 +71,24 @@ public :
 
     /// @brief multiply 2 ratio of the same type
     /// @param r ratio to multiply to the calling ratio 
-    /// @return the multiplication of the current ratio and the argument ratio
+    /// @return a ratio corresponding to the multiplication of the current ratio and the argument ratio
     Ratio operator* (const Ratio& r) ; 
 
     /// @brief multiply a rational and a int
     /// @param nb int to multiply to the calling ratio
-    /// @return the multiplication of the current ratio and the argument int
+    /// @return a ratio corresponding to the multiplication of the current ratio and the argument int
     Ratio operator* (const int nb) ; 
 
     /// @brief divide 2 ratio of the same type
     /// @param r ratio to divide to the calling ratio 
-    /// @return the division of the current ratio and the argument ratio
+    /// @return a ratio corresponding to the division of the current ratio and the argument ratio
 	Ratio operator/ (const Ratio& r) ;
+
+	/// @brief divide ratio with a number 
+	/// @param nb nb to divide to the calling ratio 
+	/// @return a ratio corresponding to the division of the current ratio and the argument number
+	Ratio operator/(const int nb) ; 
+
 
     /// @brief unary minus
     /// @return the minus the calling ratio 
@@ -204,16 +210,40 @@ Ratio<T> Ratio<T>::abs() {
 		return (r._denominator == 0) ? stream << "inf" : stream << r._numerator << "/" << r._denominator ; 
 	}; 
 
+	/// @brief divide a number with a ratio
+	/// @param nb number to divide to the ratio 
+	/// @param r the ratio 
+	/// @return a ratio corresponding to the division of the ratio and the number
+	friend Ratio<T> operator/ (const int nb, const Ratio<T>& r){
+		assert( (r._numerator != 0) && "error: the denominator is null");
+		Ratio<T> result((r._denominator * nb), r._numerator);
+		result.reduce() ; 
+		result.set_minus() ; 
+		return result; 
+	}; 
+
+	/// @brief multiply a rational and a int or a long int
+	/// @param nb number to multiply to the ratio
+	/// @param r ratio to multiply to the number
+	/// @return a ratio corresponding to the multiplication of the ratio and the number
+	friend Ratio<T> operator* (const int nb, const Ratio<T>& r){
+		Ratio<T> result((r._numerator*nb),(r._denominator));
+		result.reduce();
+		result.set_minus() ; 
+		return result;
+	};
+
 };	
 
 
 //--------------------------Constructor------------------------------//
 template<typename T>
 Ratio<T>::Ratio(const T num, const T den) {
-	 static_assert(std::is_integral<T>::value, "Integral required.");
-	 //assert( (this->_denominator != 0) && "error: the denominator can't be null");
-	 this->_numerator = num ; 
-	 this->_denominator = den ; 
+	static_assert(std::is_integral<T>::value, "Integral required.");
+	this->_numerator = num ; 
+	this->_denominator = den ; 
+	this->reduce() ;
+	this->set_minus() ;
 }
 
 //--------------------------Getters------------------------------//
@@ -240,13 +270,10 @@ void Ratio<T>::set_denominator(T den){
 
 //--------------------------Operator------------------------------//
 template<typename T>
-Ratio<T>& Ratio<T>::operator=(const Ratio<T> &r)
-{
+Ratio<T>& Ratio<T>::operator=(const Ratio<T> &r){
 	if(&r == this) return *this;
-
 	this->_denominator = r._denominator;
 	this->_numerator = r._numerator;
-
 	return *this;
 }
 
@@ -254,6 +281,7 @@ template<typename T>
 Ratio<T> Ratio<T>::operator- () {
 	Ratio<T> result(-this->_numerator, this->_denominator) ; 
 	result.reduce() ; 
+	result.set_minus() ; 
 	return result; 
 }
 
@@ -261,6 +289,7 @@ template<typename T>
 Ratio<T> Ratio<T>::operator+ (const Ratio& r)  {
 	Ratio<T> result(this->_numerator*r._denominator+this->_denominator*r._numerator, this->_denominator*r._denominator); 
 	result.reduce() ; 
+	result.set_minus() ; 
 	return result; 
 }
 
@@ -268,6 +297,7 @@ template<typename T>
 Ratio<T> Ratio<T>::operator- (const Ratio& r)  {
 	Ratio<T> result(this->_numerator*r._denominator-this->_denominator*r._numerator, this->_denominator*r._denominator); 
 	result.reduce() ; 
+	result.set_minus() ; 
 	return result; 
 }
 
@@ -275,24 +305,38 @@ template<typename T>
 Ratio<T> Ratio<T>::operator* (const Ratio<T>& r) {
 	Ratio<T> result((this->_numerator*r._numerator), (this->_denominator*r._denominator)) ; 
 	result.reduce() ; 
+	result.set_minus() ; 
 	return result; 
 }
 
-//Faire Test unitaire
 template<typename T>
 Ratio<T> Ratio<T>::operator* (const int nb){
 	Ratio<T> result((this->_numerator*nb),(this->_denominator));
 	result.reduce();
+	result.set_minus() ; 
 	return result;
-
 }
 
 template<typename T>
 Ratio<T> Ratio<T>::operator/(const Ratio<T>& r){
+	assert( (this->_denominator != 0) && "error: the denominator is null");
+	assert( (r->_numerator != 0) && "error: the denominator is null");
 	Ratio<T> result((this->_numerator * r._denominator), (this->_denominator * r._numerator));
 	result.reduce() ; 
+	result.set_minus() ; 
 	return result; 
 }
+
+template<typename T>
+Ratio<T> Ratio<T>::operator/(const int nb){
+	assert( (this->_denominator != 0) && "error: the denominator is null");
+	assert( (nb != 0) && "error: the denominator is null");
+	Ratio<T> result(this->_numerator, (this->_denominator * nb));
+	result.reduce() ; 
+	result.set_minus() ; 
+	return result; 
+}
+
 
 //Faire test unitaire
 template<typename T>
@@ -350,8 +394,8 @@ void Ratio<T>::reduce() {
 
 template<typename T> 
 void Ratio<T>::set_minus(){
-	if((this->_numerator() > 0 && this->_denominator() < 0 )
-	|| (this->_numerator() < 0 && this->_denominator() < 0 ) ){
+	if((this->_numerator > 0 && this->_denominator < 0 )
+	|| (this->_numerator < 0 && this->_denominator < 0 ) ){
 		this->_numerator = -this->_numerator ; 
 		this->_denominator = -this->_denominator ; 
 	}
@@ -366,9 +410,7 @@ template<typename T>
 Ratio<T> Ratio<T>::inverse() {
 	assert( (this->_denominator != 0) && "error: the denominator is null, impossible to inverse inf");
 	assert( (this->_numerator != 0) && "error: the numerator is null, impossible to inverse this ratio");
-	Ratio<T> result (this->_denominator, this->_numerator) ; 
-	result.reduce() ; 
-	return result; 
+	return Ratio<T>(this->_denominator, this->_numerator) ; 
 }
 
 
@@ -400,6 +442,7 @@ Ratio<T> Ratio<T>::convert_float_to_ratio(const float x, const int nb_iter){
 	float q = (int)x; 
 	Ratio<T> result(Ratio<T>(q,1.0) + convert_float_to_ratio(x-q, nb_iter-1)); 
 	result.reduce() ; 
+	result.set_minus() ;
 	return result; 
 }
 
@@ -420,7 +463,8 @@ template<typename T>
 Ratio<T> Ratio<T>::pow(const Ratio<T>& r, const int n) {
 	if(n==0) return Ratio<T>::one() ;
 	Ratio<T> result = Ratio<T>(std::pow(r._numerator, n), std::pow(r._denominator, n)); 
-	result.reduce() ; 
+	result.reduce() ;
+	result.set_minus() ;	 
 	return result; 
 }
 
@@ -458,8 +502,7 @@ float Ratio<T>::taylor_cos(const Ratio& r){
 	float result = 0.; 
 	Ratio<T> r1(-1,1);
 	int n = 16;
-	for (int i = 0; i < n; i++)
-	{
+	for (int i = 0; i < n; i++){
 		result = result + (pow(r1, i)*pow(r, 2*i)).convert_ratio_to_float()/factorial(2*i); 
 	}
 	return result;

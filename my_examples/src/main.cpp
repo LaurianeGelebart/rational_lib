@@ -4,15 +4,19 @@
 
 //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
 
+
+
+
 int main() {
 
   Ratio<int> r(4,8) ; 
-  Ratio<int> r2(6,4) ; 
-  Ratio<int> result;
+  Ratio<long int> r2(6.3,4.4) ; 
+  Ratio<long int> result;
 
-  result = r-r2;
+  result = 2*r2.inverse();
+  
 
-  std::cout<<result<<std::endl;
+  std::cout<<r2<<std::endl;
 
 
 
