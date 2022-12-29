@@ -261,11 +261,15 @@ T Ratio<T>::get_denominator(){
 template<typename T>
 void Ratio<T>::set_numerator(T num){
 	this->_numerator = num ; 
+	this->reduce(); 
+	this->set_minus(); 
 }
 
 template<typename T>
 void Ratio<T>::set_denominator(T den){
 	this->_denominator = den; 
+	this->reduce(); 
+	this->set_minus(); 
 }
 
 //--------------------------Operator------------------------------//
@@ -320,7 +324,7 @@ Ratio<T> Ratio<T>::operator* (const int nb){
 template<typename T>
 Ratio<T> Ratio<T>::operator/(const Ratio<T>& r){
 	assert( (this->_denominator != 0) && "error: the denominator is null");
-	assert( (r->_numerator != 0) && "error: the denominator is null");
+	assert( (r._numerator != 0) && "error: the denominator is null");
 	Ratio<T> result((this->_numerator * r._denominator), (this->_denominator * r._numerator));
 	result.reduce() ; 
 	result.set_minus() ; 
@@ -410,7 +414,9 @@ template<typename T>
 Ratio<T> Ratio<T>::inverse() {
 	assert( (this->_denominator != 0) && "error: the denominator is null, impossible to inverse inf");
 	assert( (this->_numerator != 0) && "error: the numerator is null, impossible to inverse this ratio");
-	return Ratio<T>(this->_denominator, this->_numerator) ; 
+	Ratio<T> result = Ratio<T>(this->_denominator, this->_numerator) ; 
+	result.set_minus(); 
+	return result; 
 }
 
 
@@ -482,7 +488,7 @@ float Ratio<T>::find_name(Ratio<T> r, const int n){
 template<typename T>
 float Ratio<T>::sqrt(Ratio<T> r){
 	assert( (r._numerator > 0 || r._denominator > 0) && "error: square root impossible under 1. ");
-    return std::pow(r.convert_ratio_to_float(), 1.0/(float)2);
+    return std::pow(r.convert_ratio_to_float(), 1.0/2.0);
    // return  std::sqrt(r._numerator) / std::sqrt(r._denominator); C'est quoi le mieux ?
 }
 

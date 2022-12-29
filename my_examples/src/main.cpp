@@ -10,13 +10,30 @@
 int main() {
 
   Ratio<int> r(4,8) ; 
-  Ratio<long int> r2(6.3,4.4) ; 
-  Ratio<long int> result;
+  Ratio<int> r2(221.0, 782.0) ; 
+  Ratio<int> result;
 
-  result = 2*r2.inverse();
+  result = r.inverse();
+ 
+
+
+
+
+  //--------------------- La fonction exp test ------------------//
+	
+   
+  Ratio<int> r4(88.0, 1.0) ; 
+  Ratio<int> r3 ; 
   
+  r3.set_numerator(88.0) ; 
+  r3.set_denominator(1.0) ; 
+  float	f2 = std::log(88.0 / 1.0) ; 
+  float f3 = Ratio<int>::log(r4) ; 
+  std::cout << f2 <<std::endl ; 
+  std::cout<< (double)std::abs(f2 - f3) <<std::endl;
+  std::cout<< Ratio<int>::log(r3) <<std::endl;
 
-  std::cout<<r2<<std::endl;
+  
 
 
 

@@ -8,7 +8,7 @@
 #include "Ratio.hpp"
 
 
-constexpr double epsilon = 0.001;
+constexpr double epsilon = 0.0001;
 
 
 /*------------------- CONSTRUCTORS ---------------------*/
@@ -19,7 +19,7 @@ TEST (RatioConstructor, default_constructor) {
 }
 
 TEST (RatioConstructor, constructor_int) { 
-	Ratio<int> r(2,6);
+	Ratio<int> r(2,7);
 	ASSERT_EQ (r.get_numerator(), 2);
 }
 
@@ -49,6 +49,8 @@ TEST (RatioArithmetic, multiplication) {
 	std::generate(data4.begin(), data4.end(), gen);
 
 	for(int run=0; run<nbTest; ++run){
+		r1 = Ratio<long int>::one();
+		r2 = Ratio<long int>::one();
 		r1.set_numerator(data1[run]) ;
 		r1.set_denominator(data2[run]) ; 
 		r2.set_numerator(data3[run]);
@@ -58,6 +60,11 @@ TEST (RatioArithmetic, multiplication) {
 		long int num = (data1[run]*data3[run]) ; 
 		long int den = (data2[run]*data4[run]) ; 
 		long int pgcd = std::gcd(num, den); 
+
+		if((num > 0 && den < 0 ) || (num < 0 && den < 0 ) ){
+			num = -num ; 
+			den = -den ; 
+		}
 
 		ASSERT_EQ (r3.get_numerator(), num/pgcd);
 		ASSERT_EQ (r3.get_denominator(), den/pgcd);
@@ -82,6 +89,8 @@ TEST (RatioArithmetic, addition) {
 	std::generate(data4.begin(), data4.end(), gen);
 
 	for(int run=0; run<nbTest; ++run){
+		r1 = Ratio<long int>::one();
+		r2 = Ratio<long int>::one();
 		r1.set_numerator(data1[run]) ;
 		r1.set_denominator(data2[run]) ; 
 		r2.set_numerator(data3[run]);
@@ -91,6 +100,11 @@ TEST (RatioArithmetic, addition) {
 		long int num = (data1[run]*data4[run]+data3[run]*data2[run]) ; 
 		long int den = (data2[run]*data4[run]) ; 
 		long int pgcd = std::gcd(num, den); 
+
+		if((num > 0 && den < 0 ) || (num < 0 && den < 0 ) ){
+			num = -num ; 
+			den = -den ; 
+		}
 
 		ASSERT_EQ (r3.get_numerator(), num/pgcd);
 		ASSERT_EQ (r3.get_denominator(), den/pgcd);
@@ -115,6 +129,8 @@ TEST (RatioArithmetic, division) {
 	std::generate(data4.begin(), data4.end(), gen);
 
 	for(int run=0; run<nbTest; ++run){
+		r1 = Ratio<long int>::one();
+		r2 = Ratio<long int>::one();
 		r1.set_numerator(data1[run]) ;
 		r1.set_denominator(data2[run]) ; 
 		r2.set_numerator(data3[run]);
@@ -124,6 +140,11 @@ TEST (RatioArithmetic, division) {
 		long int num = (data1[run]*data4[run]) ; 
 		long int den = (data2[run]*data3[run]) ; 
 		long int pgcd = std::gcd(num, den); 
+
+		if((num > 0 && den < 0 ) || (num < 0 && den < 0 ) ){
+			num = -num ; 
+			den = -den ; 
+		}
 
 		ASSERT_EQ (r3.get_numerator(), num/pgcd);
 		ASSERT_EQ (r3.get_denominator(), den/pgcd);
@@ -138,7 +159,7 @@ TEST (RatioArithmetic, soustraction) {
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
 	const size_t nbTest = 100 ; 
-	Ratio<int> r1, r2, r3;
+	Ratio<long int> r1, r2, r3;
 
 	std::vector<long int> data1(nbTest), data2(nbTest), data3(nbTest), data4(nbTest);
 	std::generate(data1.begin(), data1.end(), gen);
@@ -147,6 +168,8 @@ TEST (RatioArithmetic, soustraction) {
 	std::generate(data4.begin(), data4.end(), gen);
 
 	for(int run=0; run<nbTest; ++run){
+		r1 = Ratio<long int>::one();
+		r2 = Ratio<long int>::one();
 		r1.set_numerator(data1[run]) ;
 		r1.set_denominator(data2[run]) ; 
 		r2.set_numerator(data3[run]);
@@ -156,6 +179,11 @@ TEST (RatioArithmetic, soustraction) {
 		long int num = (data1[run]*data4[run]-data3[run]*data2[run]) ; 
 		long int den = (data2[run]*data4[run]) ; 
 		long int pgcd = std::gcd(num, den); 
+
+		if((num > 0 && den < 0 ) || (num < 0 && den < 0 ) ){
+			num = -num ; 
+			den = -den ; 
+		}
 
 		ASSERT_EQ (r3.get_numerator(), num/pgcd);
 		ASSERT_EQ (r3.get_denominator(), den/pgcd);
@@ -179,6 +207,8 @@ TEST(VectorDArithmetic, double_equals){
 	std::generate(data1.begin(), data1.end(), gen);
 	std::generate(data2.begin(), data2.end(), gen);
 	for(int run=0; run<nbTest; ++run){
+		r1 = Ratio<long int>::one();
+		r2 = Ratio<long int>::one();
 		r1.set_numerator(data1[run]);
 		r1.set_denominator(data2[run]); 
 		r2.set_numerator(data1[run]);
@@ -206,10 +236,11 @@ TEST (VectorDArithmetic, equals) {
 	std::generate(data1.begin(), data1.end(), gen);
 	std::generate(data2.begin(), data2.end(), gen);
 	for(int run=0; run<nbTest; ++run){
-		r2.set_numerator(data1[run]);
-		r2.set_denominator(data2[run]); 
+		r1 = Ratio<long int>::one();
+		r1.set_numerator(data1[run]);
+		r1.set_denominator(data2[run]); 
 		
-		r1 = r2;
+		r2 = r1;
 		bool equality = (r1 == r2); //renvoie un bool
 		bool not_equality = (r2 == r3);
 
@@ -333,6 +364,7 @@ TEST (VectorDArithmetic, cosinus){
 
 
 	for(int run=0; run<nbTest; ++run){
+		r = Ratio<long int>::one();
 		r.set_numerator(data1[run]) ;
 		r.set_denominator(data2[run]) ; 
 
@@ -363,6 +395,7 @@ TEST (RatioMethode, reduce) {
 	std::generate(data2.begin(), data2.end(), gen);
 
 	for(int run=0; run<nbTest; ++run){
+		r1 = Ratio<long int>::one();
 		r1.set_numerator(data1[run]) ;
 		r1.set_denominator(data2[run]) ; 
 
@@ -390,6 +423,7 @@ TEST (RatioMethode, power) {
 	std::generate(data2.begin(), data2.end(), gen);
 
 	for(int run=0; run<nbTest; ++run){
+		r = Ratio<long int>::one();
 		r.set_numerator(data1[run]) ;
 		r.set_denominator(data2[run]) ; 
 
@@ -417,14 +451,14 @@ TEST (RatioMethode, inverse) {
 	std::generate(data2.begin(), data2.end(), gen);
 
 	for(int run=0; run<nbTest; ++run){
+		r1 = Ratio<long int>::one();
 		r1.set_numerator(data1[run]) ;
 		r1.set_denominator(data2[run]) ; 
 
 		r2 = r1.inverse() ;
-		r1.reduce(); 
 		
-		ASSERT_EQ (r2.get_numerator(), r1.get_denominator());
-		ASSERT_EQ (r2.get_denominator(), r1.get_numerator());
+		ASSERT_EQ (std::abs(r2.get_numerator()), r1.get_denominator());
+		ASSERT_EQ (r2.get_denominator(), std::abs(r1.get_numerator()));
 	}
 }
 
@@ -444,6 +478,7 @@ TEST (RatioMethode, ratio_to_float) {
 	std::generate(data2.begin(), data2.end(), gen);
 
 	for(int run=0; run<nbTest; ++run){
+		r1 = Ratio<long int>::one();
 		r1.set_numerator(data1[run]) ;
 		r1.set_denominator(data2[run]) ;
 
@@ -485,48 +520,64 @@ TEST (RatioMethode, exponantial) {
 
 	const size_t nbTest =100 ; 
 	Ratio<long int> r1;
-	float f1, f2 ; 
+	float f1, f2, delta ; 
+	int puissancef1, puissancef2 ; 
 
 	std::vector<long int> data1(nbTest), data2(nbTest);
 	std::generate(data1.begin(), data1.end(), gen);
 	std::generate(data2.begin(), data2.end(), gen);
 
 	for(int run=0; run<nbTest; ++run){
+		r1 = Ratio<long int>::one();  
 		r1.set_numerator(data1[run]) ;
 		r1.set_denominator(data2[run]) ;
 
 		f1 = Ratio<long int>::exp(r1);
 		f2 = std::exp((float)data1[run] / (float)data2[run]) ; 
-		
-		ASSERT_EQ (f1, f2);
+				
+		delta = std::abs(f1 - f2) ;
+		puissancef1 = std::log10(f1); 
+		puissancef2 = std::log10(f2); 
+		if (puissancef1>puissancef2) delta /= std::pow(10,puissancef1) ; 
+		else delta /= std::pow(10,puissancef2) ; 
+
+		ASSERT_LT (delta, epsilon);		
 	}
 
 }
 
 
 TEST (RatioMethode, logarithm) {
-	const size_t maxSize = 1000;  
+	const size_t maxSize = 100;  
 	const size_t minSize = 1;  
-	std::mt19937 generator(3);
+	std::mt19937 generator(0);
 	std::uniform_int_distribution<long int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
-	const size_t nbTest =100 ; 
+	const size_t nbTest =10 ; 
 	Ratio<long int> r1;
-	float f1, f2 ; 
+	float f1, f2, delta ; 
+	int puissancef1, puissancef2 ; 
 
 	std::vector<long int> data1(nbTest), data2(nbTest);
 	std::generate(data1.begin(), data1.end(), gen);
 	std::generate(data2.begin(), data2.end(), gen);
 
 	for(int run=0; run<nbTest; ++run){
+		r1 = Ratio<long int>::one(); 
 		r1.set_numerator(data1[run]) ;
 		r1.set_denominator(data2[run]) ;
 
 		f1 = Ratio<long int>::log(r1);
 		f2 = std::log((float)data1[run] / (float)data2[run]) ; 
 		
-		ASSERT_EQ (f1, f2);
+		delta = std::abs(f1 - f2) ;
+	//	puissancef1 = std::log10(f1);    CA MARCHE PAS 
+	//	puissancef2 = std::log10(f2); 
+	//	if (puissancef1>puissancef2) delta /= std::pow(10,puissancef1) ; 
+	//	else delta /= std::pow(10,puissancef2) ; 
+
+		ASSERT_EQ (puissancef2, epsilon);
 	}
 }
 
@@ -539,46 +590,62 @@ TEST (RatioMethode, square_root) {
 
 	const size_t nbTest =100 ; 
 	Ratio<long int> r1;
-	float f1, f2 ; 
+	float f1, f2 , delta; 
+	int puissancef1, puissancef2 ; 
 
 	std::vector<long int> data1(nbTest), data2(nbTest);
 	std::generate(data1.begin(), data1.end(), gen);
 	std::generate(data2.begin(), data2.end(), gen);
 
 	for(int run=0; run<nbTest; ++run){
+		r1 = Ratio<long int>::one(); 
 		r1.set_numerator(data1[run]) ;
 		r1.set_denominator(data2[run]) ;
 
 		f1 = Ratio<long int>::sqrt(r1);
 		f2 = std::sqrt((float)data1[run] / (float)data2[run]) ; 
 		
-		ASSERT_EQ (f1, f2);
+		delta = std::abs(f1 - f2) ;
+		puissancef1 = std::log10(f1); 
+		puissancef2 = std::log10(f2); 
+		if (puissancef1>puissancef2) delta /= std::pow(10,puissancef1) ; 
+		else delta /= std::pow(10,puissancef2) ; 
+
+		ASSERT_LE (delta, epsilon);
 	}
 }
 
 
 TEST (RatioMethode, find_name) {
-	const size_t maxSize = 1000;  
-	const size_t minSize = 0;  
-	std::mt19937 generator(3);
-	std::uniform_int_distribution<long int> uniformIntDistribution(minSize,maxSize);
+	const size_t maxSize = 100;  
+	const size_t minSize = 1;  
+	std::mt19937 generator(0);
+	std::uniform_int_distribution< int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
-	const size_t nbTest =1000 ; 
-	Ratio<long int> r1;
-	float f1, f2 ; 
+	const size_t nbTest =10 ; 
+	Ratio< int> r1;
+	float f1, f2 , delta; 
+	int puissancef1, puissancef2 ; 
 
-	std::vector<long int> data1(nbTest), data2(nbTest);
+	std::vector< int> data1(nbTest), data2(nbTest);
 	std::generate(data1.begin(), data1.end(), gen);
 	std::generate(data2.begin(), data2.end(), gen);
 
 	for(int run=0; run<nbTest; ++run){
+		r1 = Ratio<int>::one(); 
 		r1.set_numerator(data1[run]) ;
 		r1.set_denominator(data2[run]) ;
 
-		f1 = Ratio<long int>::find_name(r1, run);
+		f1 = Ratio< int>::find_name(r1, run);
 		f2 = std::pow((float)data1[run] / (float)data2[run], 1.0/(float)run) ; 
 		
+		delta = std::abs(f1 - f2) ;
+		puissancef1 = std::log10(f1); 
+		puissancef2 = std::log10(f2); 
+		if (puissancef1>puissancef2) delta /= std::pow(10,puissancef1) ; 
+		else delta /= std::pow(10,puissancef2) ;  
+
 		ASSERT_EQ (f1, f2);
 	}
 }
