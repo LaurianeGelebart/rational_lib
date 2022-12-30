@@ -48,6 +48,11 @@
         "ctime": "cpp",
         "map": "cpp",
         "set": "cpp",
-        "iomanip": "cpp"
-    }
+        "iomanip": "cpp",
+        "chrono": "cpp",
+        "complex": "cpp",
+        "cstring": "cpp",
+        "ratio": "cpp"
+    },
+    "cmake.configureOnOpen": false
 }

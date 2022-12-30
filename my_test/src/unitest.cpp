@@ -536,12 +536,12 @@ TEST (RatioMethode, exponantial) {
 		f2 = std::exp((float)data1[run] / (float)data2[run]) ; 
 				
 		delta = std::abs(f1 - f2) ;
-		puissancef1 = std::log10(f1); 
-		puissancef2 = std::log10(f2); 
-		if (puissancef1>puissancef2) delta /= std::pow(10,puissancef1) ; 
-		else delta /= std::pow(10,puissancef2) ; 
+		puissancef1 = std::log10(std::abs(f1));    
+		puissancef2 = std::log10(std::abs(f2)); 
+		if (puissancef1>puissancef2) delta /= std::pow(10,puissancef2) ; 
+		else delta /= std::pow(10,puissancef1) ; 
 
-		ASSERT_LT (delta, epsilon);		
+		ASSERT_LE (delta, epsilon);		
 	}
 
 }
@@ -554,7 +554,7 @@ TEST (RatioMethode, logarithm) {
 	std::uniform_int_distribution<long int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
-	const size_t nbTest =10 ; 
+	const size_t nbTest =100 ; 
 	Ratio<long int> r1;
 	float f1, f2, delta ; 
 	int puissancef1, puissancef2 ; 
@@ -572,12 +572,12 @@ TEST (RatioMethode, logarithm) {
 		f2 = std::log((float)data1[run] / (float)data2[run]) ; 
 		
 		delta = std::abs(f1 - f2) ;
-	//	puissancef1 = std::log10(f1);    CA MARCHE PAS 
-	//	puissancef2 = std::log10(f2); 
-	//	if (puissancef1>puissancef2) delta /= std::pow(10,puissancef1) ; 
-	//	else delta /= std::pow(10,puissancef2) ; 
+		puissancef1 = std::log10(std::abs(f1));    
+		puissancef2 = std::log10(std::abs(f2)); 
+		if (puissancef1>puissancef2) delta /= std::pow(10,puissancef2) ; 
+		else delta /= std::pow(10,puissancef1) ; 
 
-		ASSERT_EQ (puissancef2, epsilon);
+		ASSERT_LE (delta, epsilon);
 	}
 }
 
@@ -606,10 +606,10 @@ TEST (RatioMethode, square_root) {
 		f2 = std::sqrt((float)data1[run] / (float)data2[run]) ; 
 		
 		delta = std::abs(f1 - f2) ;
-		puissancef1 = std::log10(f1); 
-		puissancef2 = std::log10(f2); 
-		if (puissancef1>puissancef2) delta /= std::pow(10,puissancef1) ; 
-		else delta /= std::pow(10,puissancef2) ; 
+		puissancef1 = std::log10(std::abs(f1));    
+		puissancef2 = std::log10(std::abs(f2)); 
+		if (puissancef1>puissancef2) delta /= std::pow(10,puissancef2) ; 
+		else delta /= std::pow(10,puissancef1) ;  
 
 		ASSERT_LE (delta, epsilon);
 	}
@@ -623,7 +623,7 @@ TEST (RatioMethode, find_name) {
 	std::uniform_int_distribution< int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
-	const size_t nbTest =10 ; 
+	const size_t nbTest =100 ; 
 	Ratio< int> r1;
 	float f1, f2 , delta; 
 	int puissancef1, puissancef2 ; 
@@ -641,10 +641,10 @@ TEST (RatioMethode, find_name) {
 		f2 = std::pow((float)data1[run] / (float)data2[run], 1.0/(float)run) ; 
 		
 		delta = std::abs(f1 - f2) ;
-		puissancef1 = std::log10(f1); 
-		puissancef2 = std::log10(f2); 
-		if (puissancef1>puissancef2) delta /= std::pow(10,puissancef1) ; 
-		else delta /= std::pow(10,puissancef2) ;  
+		puissancef1 = std::log10(std::abs(f1));    
+		puissancef2 = std::log10(std::abs(f2)); 
+		if (puissancef1>puissancef2) delta /= std::pow(10,puissancef2) ; 
+		else delta /= std::pow(10,puissancef1) ;  
 
 		ASSERT_EQ (f1, f2);
 	}

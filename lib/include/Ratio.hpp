@@ -185,7 +185,7 @@ Ratio<T> Ratio<T>::abs() {
 	static float find_name(Ratio r, const int n) ; 
 
 
-	static float cos(const Ratio& r);
+	static float cos(Ratio& r);
 
 	/// @brief calculate the factorial of integer
 	/// @return factorial of n	
@@ -385,7 +385,7 @@ bool Ratio<T>::operator> (const Ratio& r){
 template<typename T>
 void Ratio<T>::display() const {
 	if (this->_denominator == 0)  std::cout << "inf" << std::endl ; 
-	else std::cout << this->_denominator << "/" << this->_denominator << std::endl;
+	else std::cout << this->_numerator << "/" << this->_denominator << std::endl;
 }
 
 
@@ -443,7 +443,7 @@ Ratio<T> Ratio<T>::convert_float_to_ratio(const float x, const int nb_iter){
         return -(convert_float_to_ratio(-x,nb_iter));
     }
 	if(x<1){
-		return Ratio<T>(1.0,(convert_float_to_ratio((float)1.0/x, nb_iter).convert_ratio_to_float())); 
+		return Ratio<T>(1.0, (convert_float_to_ratio( (float)1.0/x, nb_iter ).convert_ratio_to_float()) ); 
 	}
 	float q = (int)x; 
 	Ratio<T> result(Ratio<T>(q,1.0) + convert_float_to_ratio(x-q, nb_iter-1)); 
@@ -454,7 +454,7 @@ Ratio<T> Ratio<T>::convert_float_to_ratio(const float x, const int nb_iter){
 
 //------- souvenir de pow sans std pour le rapport ----------//
 /*template<typename T>
-Ratio<T> Ratio<T>::pow(const Ratio<T>& r, const int n) {
+Ratio<T> Ratio<T>::pow_(const Ratio<T>& r, const int n) {
 	if(n==0) return Ratio<T>::one() ;
 	Ratio<T> result = r;
 	for (size_t i = 0; i <  std::abs(n-1); i++){
@@ -515,6 +515,6 @@ float Ratio<T>::taylor_cos(const Ratio& r){
 }
 
 template<typename T>
-float Ratio<T>::cos(const Ratio& r){
+float Ratio<T>::cos(Ratio& r){
 	return std::cos(r.convert_ratio_to_float()); 
 }
