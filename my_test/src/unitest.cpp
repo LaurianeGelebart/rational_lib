@@ -369,7 +369,7 @@ TEST (VectorDArithmetic, cosinus){
 		r.set_denominator(data2[run]) ; 
 
 		test1 = std::cos((float)data1[run]/(float)data2[run]);
-		test2 = Ratio<long int>::taylor_cos(r);
+		test2 = Ratio<long int>::cos(r);
 		eps = std::abs(test2 - test1);
 		ASSERT_LE(eps,0.01);	
 
@@ -465,13 +465,14 @@ TEST (RatioMethode, inverse) {
 TEST (RatioMethode, ratio_to_float) {
 	const size_t maxSize = 1000;  
 	const size_t minSize = -1000;  
-	std::mt19937 generator(3);
+	std::mt19937 generator(0);
 	std::uniform_int_distribution<long int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
 	const size_t nbTest =100 ; 
 	Ratio<long int> r1;
-	float f ; 
+	float f1, f2, delta; 
+	int puissancef1, puissancef2 ; 
 
 	std::vector<long int> data1(nbTest), data2(nbTest);
 	std::generate(data1.begin(), data1.end(), gen);
@@ -482,31 +483,48 @@ TEST (RatioMethode, ratio_to_float) {
 		r1.set_numerator(data1[run]) ;
 		r1.set_denominator(data2[run]) ;
 
-		f = (float)data1[run]/(float)data2[run]; 
-		
-		ASSERT_EQ (r1.convert_ratio_to_float(), f);
+		f1 = r1.convert_ratio_to_float(); 
+		f2 = (float)data1[run]/(float)data2[run];
+				
+		delta = std::abs(f1 - f2) ;
+		puissancef1 = std::log10(std::abs(f1));    
+		puissancef2 = std::log10(std::abs(f2)); 
+		if (puissancef1>puissancef2) delta /= std::pow(10,puissancef2) ; 
+		else delta /= std::pow(10,puissancef1) ; 
+
+		ASSERT_LE (delta, epsilon);	 
 	}
 }
 
 TEST (RatioMethode, float_to_ratio) {
+	float easier_epsilon = 0.05 ; 
+
 	const size_t maxSize = 1000;  
-	const size_t minSize = -1000;  
-	std::mt19937 generator(3);
-	std::uniform_int_distribution<long int> uniformIntDistribution(minSize,maxSize);
-	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
+	const size_t minSize = 0;  
+	std::mt19937 generator(0);
+	std::uniform_real_distribution<double> uniformFloatDistribution(minSize,maxSize);
+	auto gen = [&uniformFloatDistribution, &generator](){ return uniformFloatDistribution(generator);};
 
 	const size_t nbTest =100 ; 
-	Ratio<long int> r1;
-	float f ; 
+	Ratio<int> r1;
+	float f1, f2, delta ; 
+	int puissancef1, puissancef2 ; 
 
-	std::vector<long int> data1(nbTest);
-	std::generate(data1.begin(), data1.end(), gen);
+	std::vector<float> data(nbTest);
+	std::generate(data.begin(), data.end(), gen);
 
 	for(int run=0; run<nbTest; ++run){
-		f = data1[run]; 
-		r1 = Ratio<long int>::convert_float_to_ratio(f, 25) ;
+		f2 = data[run]; 
+		r1 = Ratio<int>::convert_float_to_ratio(f2, 25) ;
+		f1 = r1.convert_ratio_to_float() ; 
+				
+		delta = std::abs(f1 - f2) ;
+		puissancef1 = std::log10(std::abs(f1));    
+		puissancef2 = std::log10(std::abs(f2)); 
+		if (puissancef1>puissancef2) delta /= std::pow(10,puissancef2) ; 
+		else delta /= std::pow(10,puissancef1) ; 
 		
-		ASSERT_EQ (r1.convert_ratio_to_float(), f);
+		ASSERT_LE (delta, easier_epsilon);	 
 	}
 
 }
@@ -550,7 +568,7 @@ TEST (RatioMethode, exponantial) {
 TEST (RatioMethode, logarithm) {
 	const size_t maxSize = 100;  
 	const size_t minSize = 1;  
-	std::mt19937 generator(0);
+	std::mt19937 generator(3);
 	std::uniform_int_distribution<long int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
@@ -578,6 +596,7 @@ TEST (RatioMethode, logarithm) {
 		else delta /= std::pow(10,puissancef1) ; 
 
 		ASSERT_LE (delta, epsilon);
+
 	}
 }
 
