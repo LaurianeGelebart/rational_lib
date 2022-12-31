@@ -92,13 +92,36 @@ public :
 
     /// @brief unary minus
     /// @return the minus the calling ratio 
-    Ratio operator- () ;  
+    Ratio operator- () ; 
 
+    /// @brief verifies equality between two ratio
+    /// @param r ratio which is equal to the other
+    /// @return a boolean indicating whether the ratio is equal to the argument ratio
     bool operator== (const Ratio& r) ;
+
+	/// @brief verifies equality between two ratio
+    /// @param r ratio which is not equal to the other
+    /// @return a boolean indicating whether the ratio is not equal to the argument ratio
     bool operator!= (const Ratio& r) ;
+
+	/// @brief verifies if the argument is lower or equal to the calling ratio
+    /// @param r ratio which is lower or equal to the other
+    /// @return a boolean indicating whether the ratio is lower or equal to the argument ratio
     bool operator<= (const Ratio& r) ;
+
+	/// @brief verifies if the argument is higher or equal to the calling ratio
+    /// @param r ratio which is higher or equal to the other
+    /// @return a boolean indicating whether the ratio is higher or equal to the argument ratio
     bool operator>= (const Ratio& r) ;
+
+	/// @brief verifies if the argument is lower to the calling ratio
+    /// @param r ratio which is lower to the other
+    /// @return a boolean indicating whether the ratio is lower to the argument ratio
     bool operator< (const Ratio& r) ;
+
+	/// @brief verifies if the argument is higher  to the calling ratio
+    /// @param r ratio which is higher  to the other
+    /// @return a boolean indicating whether the ratio is higher  to the argument ratio
     bool operator> (const Ratio& r) ;
 
 
