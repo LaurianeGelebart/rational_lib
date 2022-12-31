@@ -33,6 +33,50 @@ void initialisation(){
 
 
 void operateur(){
+  Ratio<int> r1(1,3);
+  Ratio<int> r2(3,4);
+
+
+  std::cout << "soient r1 : " << r1 << " et soient r2 : " << r2 << std::endl ;
+
+  Ratio<int> copie = r1 ; 
+  std::cout << "result copie de r1 : " << copie << std::endl ;
+
+  Ratio<int> resultAdd = r1 + r2; 
+  std::cout << "resultat addition r1 + r2: " << resultAdd << std::endl ;
+
+  Ratio<int> resultSou = r2 - r1; 
+  std::cout << "result soustraction r2 - r1: " << resultSou << std::endl ;
+
+  Ratio<int> resultMult = r1 * r2; 
+  std::cout << "result multiplication r1 * r2 : " << resultMult << std::endl ;
+
+  Ratio<int> resultMultInt = r1 * 5;
+  std::cout << "result multiplication par entier r1 * 5: " << resultMultInt << std::endl ;
+
+  Ratio<int> resultdiv = r1 / r2; 
+  std::cout << "result division r1 / r2 : " << resultdiv << std::endl ;
+
+  Ratio<int> resultDivInt = r1 / 5;
+  std::cout << "result multiplication par entier r1 / 5 : " << resultDivInt << std::endl ;
+
+  bool leq = r1 <= r2 ;
+  std::cout << "result inferieur ou egale  r1 <= r2 : " << leq << std::endl ;
+
+  bool lower = r1 < r2 ;
+  std::cout << "result inferieur r1 < r2 : " << lower << std::endl ;
+
+  bool heq = r1 >= r2 ;
+  std::cout << "result supperieur ou egale r1 >= r2 " << heq << std::endl ;
+
+  bool higher = r1 > r2 ;
+  std::cout << "result supperieur r1 > r2: " << higher << std::endl ;
+
+  bool equality = r1 == r2 ;
+  std::cout << "result égalité r1 == r2 :" << equality << std::endl ;
+
+  bool not_equal = r1!= r2 ;
+  std::cout << "result inégalité r1!= r2 : " << not_equal << std::endl;
 
 }
 
@@ -105,7 +149,7 @@ int main() {
   // initialisation(); 
 
 // --- Opérateurs --- //
-  // operator(); 
+   operateur(); 
 
 // --- Methodes d'un ratio --- //
    //methode(); 
