@@ -135,17 +135,32 @@ void conversion(){
 
 
 void comparatif(){
-  Ratio<int> r(1,2) ;
-  float our_result;
+
+  /*Petite valeur*/
+  Ratio<int> r(1,2) ; 
+  float our_result1;
 
   //test avec notre fonction cosinus
-  our_result = Ratio<int> :: taylor_cos(r);
-  std::cout << "taylor_cos : " << our_result << std::endl;
+  our_result1 = Ratio<int> :: taylor_cos(r);
+  std::cout << "taylor_cos : " << our_result1 << std::endl;
 
   //test avec la fonction cosinus std
-  float std_result = r.convert_ratio_to_float();
-  std_result = std::cos(std_result);
-  std::cout << "std_cos : " << std_result << std::endl;
+  float std_result1 = r.convert_ratio_to_float();
+  std_result1 = std::cos(std_result1);
+  std::cout << "std_cos : " << std_result1 << std::endl;
+
+  /*Plus grande valeur*/
+  Ratio<int> r(18,2) ; 
+  float our_result2;
+
+  //test avec notre fonction cosinus
+  our_result2 = Ratio<int> :: taylor_cos(r);
+  std::cout << "taylor_cos : " << our_result2 << std::endl;
+
+  //test avec la fonction cosinus std
+  float std_result2 = r.convert_ratio_to_float();
+  std_result2 = std::cos(std_result2);
+  std::cout << "std_cos : " << std_result2 << std::endl;
 
 }
 
