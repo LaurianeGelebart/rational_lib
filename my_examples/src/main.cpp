@@ -135,6 +135,17 @@ void conversion(){
 
 
 void comparatif(){
+  Ratio<int> r(1,2) ;
+  float our_result;
+
+  //test avec notre fonction cosinus
+  our_result = Ratio<int> :: taylor_cos(r);
+  std::cout << "taylor_cos : " << our_result << std::endl;
+
+  //test avec la fonction cosinus std
+  float std_result = r.convert_ratio_to_float();
+  std_result = std::cos(std_result);
+  std::cout << "std_cos : " << std_result << std::endl;
 
 }
 
@@ -149,7 +160,7 @@ int main() {
   // initialisation(); 
 
 // --- Opérateurs --- //
-   operateur(); 
+   // operateur(); 
 
 // --- Methodes d'un ratio --- //
    //methode(); 
@@ -158,7 +169,7 @@ int main() {
   // conversion(); 
 
 // --- Comparatif de méthodes --- //
-  // comparatif(); 
+   comparatif(); 
 
     return 0;
 }
