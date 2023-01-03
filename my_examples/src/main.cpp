@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 
 #include "Ratio.hpp"
 
@@ -27,6 +28,7 @@ void initialisation(){
   // on ne peut pas faire de calcul avec mais le résultat est l'infini aussi
   std::cout << "opération sur l'infini : " << basic_r + inf_r2 << std::endl ; 
   // ni lui appliquer des fonctions 
+  std::cout << "attention voici un assert : "  << std::endl; 
   inf_r2.inverse(); 
 
 }
@@ -99,6 +101,9 @@ void methode(){
   // on peut obtenir l'inverse d'un ratio
   std::cout << "inverse : " << r.inverse() << std::endl ; 
 
+  // on peut obtenir la valeur absolue d'un ratio
+  std::cout << "valeur absolue : " << r.abs() << std::endl ; 
+
   // un ratio a pleins de fonctions mathématiques 
   std::cout << "puissance : " << Ratio<int>::pow(r,3) << std::endl ; 
   std::cout << "exponentiel : " << Ratio<int>::exp(r) << std::endl ; 
@@ -135,32 +140,77 @@ void conversion(){
 
 
 void comparatif(){
+  Ratio<int> r(6,5) ;
 
-  /*Petite valeur*/
-  Ratio<int> r(1,2) ; 
-  float our_result1;
+  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  srand(seed);
 
-  //test avec notre fonction cosinus
-  our_result1 = Ratio<int> :: taylor_cos(r);
-  std::cout << "taylor_cos : " << our_result1 << std::endl;
+  // Différentes méthodes de cos
+  auto start = std::chrono::steady_clock::now();
+  float cos1 = Ratio<int>::cos(r) ; 
+  auto end = std::chrono::steady_clock::now();
+  std::chrono::duration<double> elapsed_seconds = end-start;
+  std::cout << "cos avec std, résultat : " << cos1 << " temps de calcul : " << elapsed_seconds.count() << "s" << std::endl ; 
+  
+  start = std::chrono::steady_clock::now();
+  float cos2 = Ratio<int>::taylor_cos(r) ; 
+  end = std::chrono::steady_clock::now();
+  elapsed_seconds = end-start;
+  std::cout << "cos par methode de taylor, résultat : " << cos2 << " temps de calcul : " << elapsed_seconds.count() << "s" << std::endl << std::endl ; 
 
-  //test avec la fonction cosinus std
-  float std_result1 = r.convert_ratio_to_float();
-  std_result1 = std::cos(std_result1);
-  std::cout << "std_cos : " << std_result1 << std::endl;
+  // mais si on prend une plus grande valeu de cos ça ne fonctionne plus
+  Ratio<int> r2(17,2) ; 
+  float std_result2 = Ratio<int>::cos(r2) ;
+  std::cout << "cos d'une valeur plus grande avec std, résultat : " << std_result2 << " temps de calcul : " << elapsed_seconds.count() << "s" << std::endl ; 
+  float our_result2 = Ratio<int> :: taylor_cos(r2);
+  std::cout << "cos d'une valeur plus grande par methode de taylor, résultat : " << our_result2 << " temps de calcul : " << elapsed_seconds.count() << "s" << std::endl << std::endl ; 
 
-  /*Plus grande valeur*/
-  Ratio<int> r(18,2) ; 
-  float our_result2;
 
-  //test avec notre fonction cosinus
-  our_result2 = Ratio<int> :: taylor_cos(r);
-  std::cout << "taylor_cos : " << our_result2 << std::endl;
+  // Différentes méthodes de abs
+  start = std::chrono::steady_clock::now();
+  Ratio<int> abs1 = r.abs() ; 
+  end = std::chrono::steady_clock::now();
+  elapsed_seconds = end-start;
+  std::cout << "valeur absolue avec std, résultat : " << abs1 << " temps de calcul : " << elapsed_seconds.count() << "s" << std::endl ; 
 
-  //test avec la fonction cosinus std
-  float std_result2 = r.convert_ratio_to_float();
-  std_result2 = std::cos(std_result2);
-  std::cout << "std_cos : " << std_result2 << std::endl;
+  start = std::chrono::steady_clock::now();
+  Ratio<int> abs2 = r.abs2() ; 
+  end = std::chrono::steady_clock::now();
+  elapsed_seconds = end-start;
+  std::cout << "valeur absolue par nous, résultat : " << abs2 << " temps de calcul : " << elapsed_seconds.count() << "s" << std::endl << std::endl; 
+   
+
+  // Différentes méthodes de sqrt
+  start = std::chrono::steady_clock::now();
+  float sqrt1 = Ratio<int>::sqrt2(r) ; 
+  end = std::chrono::steady_clock::now();
+  elapsed_seconds = end-start;
+  std::cout << "square root avec std, résultat : " << sqrt1 << " temps de calcul : " << elapsed_seconds.count() << "s" << std::endl ; 
+  
+  start = std::chrono::steady_clock::now();
+  float sqrt2 = Ratio<int>::sqrt(r) ; 
+  end = std::chrono::steady_clock::now();
+  elapsed_seconds = end-start;
+  std::cout << "square root par nous, résultat : " << sqrt2 << " temps de calcul : " << elapsed_seconds.count() << "s" << std::endl << std::endl; 
+  
+
+  // Différentes méthodes de pow
+  start = std::chrono::steady_clock::now();
+  Ratio<int> pow1 = Ratio<int>::pow(r,3) ; 
+  end = std::chrono::steady_clock::now();
+  elapsed_seconds = end-start;
+  std::cout << "puissance par std, résultat : " << pow1 << " temps de calcul : " << elapsed_seconds.count() << "s" << std::endl ; 
+   
+  start = std::chrono::steady_clock::now();
+  Ratio<int> pow2 = Ratio<int>::pow2(r,3) ; 
+  end = std::chrono::steady_clock::now();
+  elapsed_seconds = end-start;
+  std::cout << "puissance par nous, résultat : " << pow2 << " temps de calcul : " << elapsed_seconds.count() << "s" << std::endl << std::endl; 
+
+  // notre pow ne fonctionne que pour les puissances positives
+  std::cout << "attention voici un assert : "  << std::endl; 
+  std::cout << "puissance de -3 par nous : " << Ratio<int>::pow2(r,-3)  << std::endl ; 
+
 
 }
 
@@ -172,16 +222,16 @@ void comparatif(){
 int main() {
 
 // --- Initialisation de ratios --- //
-  // initialisation(); 
+ // initialisation(); 
 
 // --- Opérateurs --- //
    // operateur(); 
 
 // --- Methodes d'un ratio --- //
-   //methode(); 
+  // methode(); 
 
 // --- Conversion de ratio --- //
-  // conversion(); 
+ //  conversion(); 
 
 // --- Comparatif de méthodes --- //
    comparatif(); 
