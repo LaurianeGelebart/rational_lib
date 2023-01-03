@@ -27,7 +27,7 @@ public :
 	//// @brief constructor from a numerator and a denominator and default constructor
 	/// @param _denominator : numerator of the ratio (default : 0.0)
 	/// @param _numerator : denominator of the ratio (default : 1.0)
-    constexpr Ratio(const T num=0.0, const T den = 1.0)
+    constexpr Ratio(const T num=0, const T den = 1)
 	noexcept{
 		static_assert(std::is_integral<T>::value, "Integral required.");
 		this->_numerator = num ; 
@@ -391,9 +391,9 @@ public :
 	/// @param r a ratio 
 	/// @param n the n of n_th root
 	/// @return a float corresponding to the n_th root of a ratio
-	constexpr static float find_name(Ratio r, const int n) 
+	constexpr static float nthrt(Ratio r, const int n) 
 	noexcept{
-		assert( (r._numerator > 0 || r._denominator > 0) && "error: find_name impossible under 1. ");
+		assert( (r._numerator > 0 || r._denominator > 0) && "error: nth root impossible under 1. ");
    		return std::pow(r.convert_ratio_to_float(), 1.0/(float)n);
 	}
 

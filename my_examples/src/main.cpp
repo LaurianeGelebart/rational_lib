@@ -4,6 +4,7 @@
 #include "Ratio.hpp"
 
 
+
 void initialisation(){
   Ratio<int> default_r ; 
   Ratio<int> basic_r(4,-8) ; 
@@ -32,6 +33,7 @@ void initialisation(){
   inf_r2.inverse(); 
 
 }
+
 
 
 void operateur(){
@@ -83,6 +85,8 @@ void operateur(){
 }
 
 
+
+
 void methode(){
   Ratio<int> r(4,7) ; 
 
@@ -109,13 +113,14 @@ void methode(){
   std::cout << "exponentiel : " << Ratio<int>::exp(r) << std::endl ; 
   std::cout << "logarithme : " << Ratio<int>::log(r) << std::endl ; 
   std::cout << "racine carrée : " << Ratio<int>::sqrt(r) << std::endl ; 
-  std::cout << "racine nième : " << Ratio<int>::find_name(r,3) << std::endl ; 
+  std::cout << "racine nième : " << Ratio<int>::nthrt(r,3) << std::endl ; 
   std::cout << "cosinus : " << Ratio<int>::cos(r) << std::endl ; 
 
   // on peut également utiliser ces methodes à la suite et faire des calculs
   std::cout << "racine carrée de ( 2*(8/7) )^3 = " << Ratio<int>::sqrt(Ratio<int>::pow(2*r,3)) << std::endl ; 
 
 }
+
 
 
 void conversion(){
@@ -136,6 +141,7 @@ void conversion(){
   std::cout << "-1/-2147483648 = " << Ratio<int>(-1,-2147483648).convert_ratio_to_float() << std::endl ; 
 
 }
+
 
 
 
@@ -211,8 +217,9 @@ void comparatif(){
   std::cout << "attention voici un assert : "  << std::endl; 
   std::cout << "puissance de -3 par nous : " << Ratio<int>::pow2(r,-3)  << std::endl ; 
 
-
 }
+
+
 
 
 
@@ -234,7 +241,7 @@ int main() {
  //  conversion(); 
 
 // --- Comparatif de méthodes --- //
-   comparatif(); 
+  // comparatif(); 
 
     return 0;
 }
