@@ -140,7 +140,7 @@ void conversion(){
 
 
 void comparatif(){
-  Ratio<int> r(6,5) ;
+ /* Ratio<int> r(6,5) ;
 
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
   srand(seed);
@@ -204,7 +204,7 @@ void comparatif(){
   std::cout << "attention voici un assert : "  << std::endl; 
   std::cout << "puissance de -3 par nous : " << Ratio<int>::pow2(r,-3)  << std::endl ; 
 
-
+*/
 }
 
 

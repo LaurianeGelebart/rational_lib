@@ -27,7 +27,8 @@ public :
 	//// @brief constructor from a numerator and a denominator and default constructor
 	/// @param _denominator : numerator of the ratio (default : 0.0)
 	/// @param _numerator : denominator of the ratio (default : 1.0)
-    Ratio(const T num=0.0, const T den = 1.0){
+    constexpr Ratio(const T num=0.0, const T den = 1.0)
+	noexcept{
 		static_assert(std::is_integral<T>::value, "Integral required.");
 		this->_numerator = num ; 
 		this->_denominator = den ; 
