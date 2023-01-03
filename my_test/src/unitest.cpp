@@ -1,8 +1,5 @@
 #include <random>
 #include <fstream>
-#include <algorithm>
-#include <cmath>
-
 #include <gtest/gtest.h>
 
 #include "Ratio.hpp"
@@ -39,7 +36,7 @@ TEST (RatioArithmetic, multiplication) {
 	std::uniform_int_distribution<long int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
-	const size_t nbTest =100 ; 
+	const int nbTest =100 ; 
 	Ratio<long int> r1, r2, r3;
 
 	std::vector<long int> data1(nbTest), data2(nbTest), data3(nbTest), data4(nbTest);
@@ -79,7 +76,7 @@ TEST (RatioArithmetic, addition) {
 	std::uniform_int_distribution<long int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
-	const size_t nbTest =100 ; 
+	const int nbTest =100 ; 
 	Ratio<long int> r1, r2, r3;
 
 	std::vector<long int> data1(nbTest), data2(nbTest), data3(nbTest), data4(nbTest);
@@ -119,7 +116,7 @@ TEST (RatioArithmetic, division) {
 	std::uniform_int_distribution<long int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
-	const size_t nbTest =100 ; 
+	const int nbTest =100 ; 
 	Ratio<long int> r1, r2, r3;
 
 	std::vector<long int> data1(nbTest), data2(nbTest), data3(nbTest), data4(nbTest);
@@ -153,12 +150,13 @@ TEST (RatioArithmetic, division) {
 }
 
 TEST (RatioArithmetic, soustraction) {
-	const size_t maxSize = 100;  
-	std::mt19937 generator(0);
-	std::uniform_int_distribution<long int> uniformIntDistribution(1,maxSize);
+	const size_t maxSize = 1000;  
+	const size_t minSize = -1000;  
+	std::mt19937 generator(3);
+	std::uniform_int_distribution<long int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
-	const size_t nbTest = 100 ; 
+	const int nbTest = 100 ; 
 	Ratio<long int> r1, r2, r3;
 
 	std::vector<long int> data1(nbTest), data2(nbTest), data3(nbTest), data4(nbTest);
@@ -191,17 +189,15 @@ TEST (RatioArithmetic, soustraction) {
 }
 
 
-
-/**/
-TEST(VectorDArithmetic, double_equals){
-	const size_t maxSize = 100;  
-	std::mt19937 generator(0);
-	std::uniform_int_distribution<long int> uniformIntDistribution(1,maxSize);
+TEST(RatioArithmetic, double_equals){
+	const size_t maxSize = 1000;  
+	const size_t minSize = -1000;  
+	std::mt19937 generator(3);
+	std::uniform_int_distribution<long int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
-	const size_t nbTest = 100 ; 
+	const int nbTest = 100 ; 
 	Ratio<long int> r1, r2, r3;
-	
 
 	std::vector<long int> data1(nbTest), data2(nbTest);
 	std::generate(data1.begin(), data1.end(), gen);
@@ -214,24 +210,24 @@ TEST(VectorDArithmetic, double_equals){
 		r2.set_numerator(data1[run]);
 		r2.set_denominator(data2[run]); 
 		
-		bool equality = (r1 == r2); //renvoie un bool
+		bool equality = (r1 == r2); 
 		bool not_equality = (r2 == r3);
 
-		ASSERT_EQ(equality ,true); //verifie si le bool renvoyer est bien true
-		ASSERT_EQ(not_equality, false); //prouve que sans l'opérateur = c'est forcément faux.
+		ASSERT_EQ(equality ,true); 
+		ASSERT_EQ(not_equality, false);
 	}
 }
 
-TEST (VectorDArithmetic, equals) {
-	const size_t maxSize = 100;  
-	std::mt19937 generator(0);
-	std::uniform_int_distribution<long int> uniformIntDistribution(1,maxSize);
+TEST (RatioArithmetic, equals) {
+	const size_t maxSize = 1000;  
+	const size_t minSize = -1000;  
+	std::mt19937 generator(3);
+	std::uniform_int_distribution<long int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
-	const size_t nbTest = 100 ; 
+	const int nbTest = 100 ; 
 	Ratio<long int> r1, r2, r3;
 	
-
 	std::vector<long int> data1(nbTest), data2(nbTest);
 	std::generate(data1.begin(), data1.end(), gen);
 	std::generate(data2.begin(), data2.end(), gen);
@@ -241,141 +237,67 @@ TEST (VectorDArithmetic, equals) {
 		r1.set_denominator(data2[run]); 
 		
 		r2 = r1;
-		bool equality = (r1 == r2); //renvoie un bool
+		bool equality = (r1 == r2); 
 		bool not_equality = (r2 == r3);
 
-		ASSERT_EQ(equality ,true); //verifie si le bool renvoyer est bien true
-		ASSERT_EQ(not_equality, false); //prouve que sans l'opérateur = c'est forcément faux.
+		ASSERT_EQ(equality ,true); 
+		ASSERT_EQ(not_equality, false);
 	}
-
 }
 
-TEST (VectorDArithmetic, lower_equal){
-	const size_t maxSize = 100;  
-	std::mt19937 generator(0);
-	std::uniform_int_distribution<long int> uniformIntDistribution(1,maxSize);
-	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
-
-	//déclaration des variables
+TEST (RatioArithmetic, lower_equal){
 	Ratio<long int> r1(1,2);
 	Ratio<long int> r2(3,2);
 		
-	//on vérifie les cas où la fonction marche	
-	bool lower = (r1 <= r2); //on test l'infériorité
-	//ou
-	bool equal = (r1 <= r1); //on teste l'égalité
+	bool lower = (r1 <= r2);
+	bool equal = (r1 <= r1); 
 
-	//cas où elle ne marche pas
 	bool upper = (r2 <= r1);
 
-	//Assert sur les résultats.
-	ASSERT_EQ(lower ,true); //verifie si le bool renvoyer est bien true
+	ASSERT_EQ(lower ,true); 
 	ASSERT_EQ(equal, true);
-	ASSERT_EQ(upper, false);
-	
-	
+	ASSERT_EQ(upper, false);	
 }
 
-TEST (VectorDArithmetic, upper_equal){
-	const size_t maxSize = 100;  
-	std::mt19937 generator(0);
-	std::uniform_int_distribution<long int> uniformIntDistribution(1,maxSize);
-	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
-
-	//déclaration des variables
+TEST (RatioArithmetic, upper_equal){
 	Ratio<long int> r1(1,2);
 	Ratio<long int> r2(3,2);
 		
-	//on vérifie les cas où la fonction marche	
-	bool upper = (r2 >= r1); //on test la supériorité
-	//ou
-	bool equal = (r2 >= r2); //on teste l'égalité
+	bool upper = (r2 >= r1); 
+	bool equal = (r2 >= r2);
 
-	//cas où elle ne marche pas
 	bool lower = (r1 >= r2);
 
-	//Assert sur les résultats.
-	ASSERT_EQ(upper ,true); //verifie si le bool renvoyer est bien true
+	ASSERT_EQ(upper ,true); 
 	ASSERT_EQ(equal, true);
 	ASSERT_EQ(lower, false);
-	
 }
 
- TEST (VectorDArithmetic, lower_to){
-	const size_t maxSize = 100;  
-	std::mt19937 generator(0);
-	std::uniform_int_distribution<long int> uniformIntDistribution(1,maxSize);
-	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
-
-	//déclaration des variables
+ TEST (RatioArithmetic, lower_to){
 	Ratio<long int> r1(1,2);
 	Ratio<long int> r2(3,2);
 	
+	bool lower = (r1 < r2); 
 
-	//on vérifie les cas où la fonction marche	
-	bool lower = (r1 < r2); //on test l'infériorité
+	bool upper = (r2 < r1);
 
-	//cas où elle ne marche pas
-	bool upper = (r2 < r1); //on teste la supériorité
-
-	//Assert sur les résultats.
-	ASSERT_EQ(lower ,true); //verifie si le bool renvoyer est bien true
+	ASSERT_EQ(lower ,true); 
 	ASSERT_EQ(upper, false);
-	
 }
  
 
-TEST (VectorDArithmetic, upper_to){
-	const size_t maxSize = 100;  
-	std::mt19937 generator(0);
-	std::uniform_int_distribution<long int> uniformIntDistribution(1,maxSize);
-	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
-
-	//déclaration des variables
+TEST (RatioArithmetic, upper_to){
 	Ratio<long int> r1(1,2);
 	Ratio<long int> r2(3,2);
 		
-	//on vérifie les cas où la fonction marche	
-	bool upper = (r2 > r1); //on test la supériorité
+	bool upper = (r2 > r1); 
 
-	//cas où elle ne marche pas
-	bool lower = (r1 > r2); //on teste l'infériorité
+	bool lower = (r1 > r2); 
 
-	//Assert sur les résultats.
-	ASSERT_EQ(upper ,true); //verifie si le bool renvoyer est bien true
-	ASSERT_EQ(lower, false);
-	
+	ASSERT_EQ(upper ,true); 
+	ASSERT_EQ(lower, false);	
 }
 
-TEST (VectorDArithmetic, cosinus){
-	const size_t maxSize = 100;  
-	const size_t minSize = -100;   
-	std::mt19937 generator(0);
-	std::uniform_int_distribution<long int> uniformIntDistribution(1,maxSize);
-	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
-
-	const size_t nbTest = 10 ; 
-	Ratio<long int> r;
-	float test1, test2, eps;
-
-	std::vector<long int> data1(nbTest), data2(nbTest);
-	std::generate(data1.begin(), data1.end(), gen);
-	std::generate(data2.begin(), data2.end(), gen);
-
-
-	for(int run=0; run<nbTest; ++run){
-		r = Ratio<long int>::one();
-		r.set_numerator(data1[run]) ;
-		r.set_denominator(data2[run]) ; 
-
-		test1 = std::cos((float)data1[run]/(float)data2[run]);
-		test2 = Ratio<long int>::cos(r);
-		eps = std::abs(test2 - test1);
-		ASSERT_LE(eps,0.01);	
-
-	}
-
-}
 
 
 /*------------------- METHODE ---------------------*/
@@ -387,7 +309,7 @@ TEST (RatioMethode, reduce) {
 	std::uniform_int_distribution<long int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
-	const size_t nbTest =100 ; 
+	const int nbTest =100 ; 
 	Ratio<long int> r1, r2;
 
 	std::vector<long int> data1(nbTest), data2(nbTest);
@@ -414,7 +336,7 @@ TEST (RatioMethode, power) {
 	std::uniform_int_distribution<long int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
-	const size_t nbTest =100 ; 
+	const int nbTest =100 ; 
 	Ratio<long int> r;
 	float f1, f2 ; 
 
@@ -443,7 +365,7 @@ TEST (RatioMethode, inverse) {
 	std::uniform_int_distribution<long int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
-	const size_t nbTest =100 ; 
+	const int nbTest =100 ; 
 	Ratio<long int> r1, r2;
 
 	std::vector<long int> data1(nbTest), data2(nbTest);
@@ -469,7 +391,7 @@ TEST (RatioMethode, ratio_to_float) {
 	std::uniform_int_distribution<long int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
-	const size_t nbTest =100 ; 
+	const int nbTest =100 ; 
 	Ratio<long int> r1;
 	float f1, f2, delta; 
 	int puissancef1, puissancef2 ; 
@@ -505,7 +427,7 @@ TEST (RatioMethode, float_to_ratio) {
 	std::uniform_real_distribution<double> uniformFloatDistribution(minSize,maxSize);
 	auto gen = [&uniformFloatDistribution, &generator](){ return uniformFloatDistribution(generator);};
 
-	const size_t nbTest =100 ; 
+	const int nbTest =100 ; 
 	Ratio<int> r1;
 	float f1, f2, delta ; 
 	int puissancef1, puissancef2 ; 
@@ -528,6 +450,42 @@ TEST (RatioMethode, float_to_ratio) {
 	}
 
 }
+TEST (RatioMethode, cosinus){
+	const size_t maxSize = 100;  
+	const size_t minSize = -100;   
+	std::mt19937 generator(0);
+	std::uniform_int_distribution<long int> uniformIntDistribution(1,maxSize);
+	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
+
+	const int nbTest = 10 ; 
+	Ratio<long int> r;
+	float f1, f2, delta ;
+	int puissancef1, puissancef2 ; 
+
+	std::vector<long int> data1(nbTest), data2(nbTest);
+	std::generate(data1.begin(), data1.end(), gen);
+	std::generate(data2.begin(), data2.end(), gen);
+
+
+	for(int run=0; run<nbTest; ++run){
+		r = Ratio<long int>::one();
+		r.set_numerator(data1[run]) ;
+		r.set_denominator(data2[run]) ; 
+
+		f1 = std::cos((float)data1[run]/(float)data2[run]);
+		f2 = Ratio<long int>::cos(r);
+
+		delta = std::abs(f1 - f2) ;
+		puissancef1 = std::log10(std::abs(f1));    
+		puissancef2 = std::log10(std::abs(f2)); 
+		if (puissancef1>puissancef2) delta /= std::pow(10,puissancef2) ; 
+		else delta /= std::pow(10,puissancef1) ; 
+		
+		ASSERT_LE (delta, epsilon);		
+
+	}
+
+}
 
 TEST (RatioMethode, exponantial) {
 	const size_t maxSize = 100;  
@@ -536,7 +494,7 @@ TEST (RatioMethode, exponantial) {
 	std::uniform_int_distribution<long int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
-	const size_t nbTest =100 ; 
+	const int nbTest =100 ; 
 	Ratio<long int> r1;
 	float f1, f2, delta ; 
 	int puissancef1, puissancef2 ; 
@@ -572,7 +530,7 @@ TEST (RatioMethode, logarithm) {
 	std::uniform_int_distribution<long int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
-	const size_t nbTest =100 ; 
+	const int nbTest =100 ; 
 	Ratio<long int> r1;
 	float f1, f2, delta ; 
 	int puissancef1, puissancef2 ; 
@@ -607,7 +565,7 @@ TEST (RatioMethode, square_root) {
 	std::uniform_int_distribution<long int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
-	const size_t nbTest =100 ; 
+	const int nbTest =100 ; 
 	Ratio<long int> r1;
 	float f1, f2 , delta; 
 	int puissancef1, puissancef2 ; 
@@ -635,14 +593,14 @@ TEST (RatioMethode, square_root) {
 }
 
 
-TEST (RatioMethode, find_name) {
+TEST (RatioMethode, nth_root) {
 	const size_t maxSize = 100;  
 	const size_t minSize = 1;  
 	std::mt19937 generator(0);
 	std::uniform_int_distribution< int> uniformIntDistribution(minSize,maxSize);
 	auto gen = [&uniformIntDistribution, &generator](){ return uniformIntDistribution(generator);};
 
-	const size_t nbTest =100 ; 
+	const int nbTest =100 ; 
 	Ratio< int> r1;
 	float f1, f2 , delta; 
 	int puissancef1, puissancef2 ; 
@@ -656,7 +614,7 @@ TEST (RatioMethode, find_name) {
 		r1.set_numerator(data1[run]) ;
 		r1.set_denominator(data2[run]) ;
 
-		f1 = Ratio< int>::find_name(r1, run);
+		f1 = Ratio< int>::nthrt(r1, run);
 		f2 = std::pow((float)data1[run] / (float)data2[run], 1.0/(float)run) ; 
 		
 		delta = std::abs(f1 - f2) ;
