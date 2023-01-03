@@ -184,7 +184,7 @@ int main() {
   // conversion(); 
 
 // --- Comparatif de méthodes --- //
-   comparatif(); 
+   //comparatif(); 
 
     return 0;
 }
